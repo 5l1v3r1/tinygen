@@ -2,24 +2,39 @@
 # Copyright 2017 Kevin Froman - MIT License - https://ChaosWebs.net/
 import configparser, os, sys, shutil
 
-# Detect color support:
+# configparser: needed for site configuration
+# os: cross platform file operations mostly
+# sys: exit
+# shutil: more file operations
+
+# Detect color support (if colorama is installed):
 try:
     import colorama
 except ImportError:
     print('Unable to load colorama, colors will not be used')
 
+# Version
 version = '0.1'
 
 def help():
     print('''Cement ''' + version + '''\n
-Copyright 2017 Kevin Froman (MIT/expat License) https://ChaosWebs.net/
+Copyright 2017 Kevin Froman (MIT/Expat License) https://ChaosWebs.net/
 
-''' + sys.argv[0] + ''' edit [post title] - create/edit a post
+''' + sys.argv[0] + ''' edit [post title] - create/edit a page
 ''' + sys.argv[0] + ''' help - show this help message
 ''' + sys.argv[0] + ''' rebuild - rebuild all pages
+
+Creating a website:
+
+    Do ''' + sys.argv[0] + ''' edit [post title] to start creating or editing a page
+
+    Optionally edit source/theme.css to change the global styles.
+    Optionally edit source/page-template.html to change global markup
+
 ''')
 
 def createFile(name):
+    # Create a source file if it does not exist
     if os.path.exists('source/pages/' + name + '.html'):
         return
     with open('source/pages/' + name + '.html', 'w') as place:
@@ -27,11 +42,13 @@ def createFile(name):
     return
 
 def fatalError(msg):
+    # print a fatal error and exit with an error status code
     print(msg)
     sys.exit(1)
     return
 
 def generatePage(title, edit):
+    # (re)generate a webpage
     navBarPages = config['SITE']['navbar pages'].replace(' ', '').split(',')
     navBar = '<ul id=\'navbar\'>'
     index = False
@@ -64,6 +81,7 @@ def generatePage(title, edit):
     return
 
 def rebuild():
+    # Rebuild all webpages
     for file in os.listdir('source/pages/'):
         if file.endswith('.html'):
             file = file.replace('.html', '')
@@ -71,6 +89,8 @@ def rebuild():
 
 command = ''
 newPostTitle = ''
+
+# Create a config file if it doesnt exist or just load existing one
 
 cfgFile = 'config.cfg'
 
@@ -89,6 +109,8 @@ try:
 except PermissionError:
     fatalError('Unable to load config, no permission.')
 
+# Parse commands
+
 try:
     command = sys.argv[1]
 except IndexError:
@@ -100,7 +122,7 @@ if command == 'edit':
     except IndexError:
         fatalError('syntax: edit "page title"')
     generatePage(newPostTitle, True)
-if command == 'rebuild':
+elif command == 'rebuild':
     rebuild()
 else:
     help()
