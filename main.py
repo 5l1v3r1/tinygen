@@ -49,6 +49,7 @@ def fatalError(msg):
 
 def generatePage(title, edit):
     # (re)generate a webpage
+    createFile(title)
     navBarPages = config['SITE']['navbar pages'].replace(' ', '').split(',')
     navBar = '<ul id=\'navbar\'>'
     index = False
@@ -56,9 +57,11 @@ def generatePage(title, edit):
         if i == 'index':
             index = True
             i = 'home'
-        navBar = navBar + '<li class="navBarItem"><a href="' + i + '.html">' + i.title() + '</a> </li>'
+            link = 'index'
+        else:
+            link = title
+        navBar = navBar + '<li class="navBarItem"><a href="' + link + '.html">' + i.title() + '</a> </li>'
     navBar = navBar + '</ul>'
-    createFile(title)
     if edit:
         os.system('sensible-editor source/pages/' + title + '.html')
     content = open('source/pages/' + title + '.html', 'r').read()
