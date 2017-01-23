@@ -17,3 +17,4 @@ Currently only tested on Python3.4.3 on Linux
 * Compatibility with Windows & most *nix distros
 * Better output with color support
 * Plugin support
+* Multi site support
