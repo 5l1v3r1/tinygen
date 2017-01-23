@@ -7,7 +7,7 @@ Work in progress, but basic features done.
 Currently only tested on Python3.4.3 on Linux
 
 ## Current features:
-* Only 106 LOC even with comments & formatting
+* Less than 200 lines of code
 * Not complicated if you have cli experience
 * Straight forward template
 
