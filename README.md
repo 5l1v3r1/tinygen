@@ -1,1 +1,3 @@
-# Best Freaking Site Generator README
+# TinyGen
+
+A simple website generator written in Python
