@@ -58,7 +58,6 @@ def generatePage(title, edit):
     editP = '' # editor proccess
     for i in navBarPages:
         if i == 'index':
-            index = True
             link = 'home'
         else:
             link = i
@@ -71,6 +70,7 @@ def generatePage(title, edit):
     template = open('source/page-template.html', 'r').read()
     if title == 'index':
         title = 'home'
+        index = True
     page = template.replace('[{TITLE}]', title.title())
     page = page.replace('[{SITETITLE}]', config['SITE']['title'])
     page = page.replace('[{AUTHOR}]', config['SITE']['author'])
