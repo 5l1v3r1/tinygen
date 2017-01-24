@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # Copyright 2017 Kevin Froman - MIT License - https://ChaosWebs.net/
-import configparser, os, sys, shutil
+import configparser, os, sys, shutil, subprocess
 
 # configparser: needed for site configuration
 # os: cross platform file operations mostly
@@ -17,7 +17,7 @@ except ImportError:
 version = '0.1'
 
 def help():
-    print('''Cement ''' + version + '''\n
+    print('''TinyGen ''' + version + '''\n
 Copyright 2017 Kevin Froman (MIT/Expat License) https://ChaosWebs.net/
 
 ''' + sys.argv[0] + ''' edit [post title] - create/edit a page
@@ -27,6 +27,8 @@ Copyright 2017 Kevin Froman (MIT/Expat License) https://ChaosWebs.net/
 Creating a website:
 
     Do ''' + sys.argv[0] + ''' edit [post title] to start creating or editing a page
+
+    Open & edit ''' + cfgFile + ''' to change site metadata & the pages on the navigation bar.
 
     Optionally edit source/theme.css to change the global styles.
     Optionally edit source/page-template.html to change global markup
@@ -52,7 +54,8 @@ def generatePage(title, edit):
     createFile(title)
     navBarPages = config['SITE']['navbar pages'].replace(' ', '').split(',')
     navBar = '<ul id=\'navbar\'>'
-    index = False
+    index = False # determines if the current file is the index
+    editP = '' # editor proccess
     for i in navBarPages:
         if i == 'index':
             index = True
@@ -63,7 +66,8 @@ def generatePage(title, edit):
         navBar = navBar + '<li class="navBarItem"><a href="' + link + '.html">' + i.title() + '</a> </li>'
     navBar = navBar + '</ul>'
     if edit:
-        os.system('sensible-editor source/pages/' + title + '.html')
+        editP = subprocess.Popen((os.getenv('EDITOR'), 'source/pages/' + title + '.html'))
+        editP.wait()
     content = open('source/pages/' + title + '.html', 'r').read()
     template = open('source/page-template.html', 'r').read()
     if title == 'index':
