@@ -59,11 +59,10 @@ def generatePage(title, edit):
     for i in navBarPages:
         if i == 'index':
             index = True
-            i = 'home'
-            link = 'index'
+            link = 'home'
         else:
-            link = title
-        navBar = navBar + '<li class="navBarItem"><a href="' + link + '.html">' + i.title() + '</a> </li>'
+            link = i
+        navBar = navBar + '<li class="navBarItem"><a href="' + i + '.html">' + link.title() + '</a> </li>'
     navBar = navBar + '</ul>'
     if edit:
         editP = subprocess.Popen((os.getenv('EDITOR'), 'source/pages/' + title + '.html'))
