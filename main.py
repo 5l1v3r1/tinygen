@@ -78,6 +78,7 @@ def generatePage(title, edit):
     page = page.replace('[{CONTENT}]', content)
     page = page.replace('[{SITEFOOTER}]', config['SITE']['footer'])
     page = page.replace('[{NAVBAR}]', navBar)
+    page = page.replace('[{SITEDESC}]', config['SITE']['description'])
     if index:
         title = 'index'
     with open('generated/' + title + '.html', 'w') as result:
