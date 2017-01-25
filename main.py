@@ -34,6 +34,7 @@ Creating a website:
     Optionally edit source/page-template.html to change global markup
 
 ''')
+    return
 
 def createFile(name):
     # Create a source file if it does not exist
@@ -93,6 +94,7 @@ def rebuild():
         if file.endswith('.html'):
             file = file.replace('.html', '')
             generatePage(file, False)
+    return
 
 command = ''
 newPostTitle = ''
