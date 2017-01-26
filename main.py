@@ -20,9 +20,10 @@ def help():
     print('''TinyGen ''' + version + '''\n
 Copyright 2017 Kevin Froman (MIT/Expat License) https://ChaosWebs.net/
 
-''' + sys.argv[0] + ''' edit [post title] - create/edit a page
+''' + sys.argv[0] + ''' edit [page title] - create/edit a page
 ''' + sys.argv[0] + ''' help - show this help message
 ''' + sys.argv[0] + ''' rebuild - rebuild all pages
+''' + sys.argv[0] + ''' delete [page title] - delete a page
 
 Creating a website:
 
@@ -35,6 +36,18 @@ Creating a website:
 
 ''')
     return
+
+def deletePage(name):
+    # Deletes a page from a site
+    try:
+        os.remove('source/pages/' + name + '.html')
+    except PermissionError:
+        print('Could not delete source file: ' + name + '. Reason: PermissionError')
+    try:
+        os.remove('generated/' + name + '.html')
+    except PermissionError:
+        print('Could not delete generated file: ' + name + '. Reason: PermissionError')
+    print('Successfully deleted page: ' + name)
 
 def createFile(name):
     # Create a source file if it does not exist
@@ -107,6 +120,8 @@ config = configparser.ConfigParser()
 
 config['SITE'] = {'title': 'My Site', 'author': 'anonymous', 'description': 'Welcome to my site!', 'footer': '', 'navbar pages': ''}
 
+deleteTitle = ''
+
 if not os.path.exists(cfgFile):
     try:
         with open(cfgFile, 'w') as configfile:
@@ -133,5 +148,11 @@ if command == 'edit':
     generatePage(newPostTitle, True)
 elif command == 'rebuild':
     rebuild()
+elif command == 'delete':
+    try:
+        deleteTitle = sys.argv[2]
+    except IndexError:
+        fatalError('syntax: delete "page title"')
+    deletePage(deleteTitle)
 else:
     help()
