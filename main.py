@@ -4,7 +4,7 @@
 import sys
 
 if sys.version_info.major == 2:
-    sys.stdout.write('Python 2 is not supported. Please use Python 3.\n')
+    sys.stderr.write('Python 2 is not supported. Please use Python 3.\n')
     sys.exit(1)
 
 import configparser, os, shutil, subprocess
