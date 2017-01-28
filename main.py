@@ -1,38 +1,45 @@
 #!/usr/bin/env python3
 # Copyright 2017 Kevin Froman - MIT License - https://ChaosWebs.net/
-import configparser, os, sys, shutil, subprocess
+
+import sys
+
+if sys.version_info.major == 2:
+    sys.stdout.write('Python 2 is not supported. Please use Python 3.\n')
+    sys.exit(1)
+
+import configparser, os, shutil, subprocess
 
 # configparser: needed for site configuration
 # os: cross platform file operations mostly
-# sys: exit
+# sys: exit & version info
 # shutil: more file operations
 
-# Detect color support (if colorama is installed):
-try:
-    import colorama
-except ImportError:
-    print('Unable to load colorama, colors will not be used')
+# Ansi codes
+GREEN = '\033[92m'
+RESET = '\033[0m'
+UNDERLINE = '\033[04m'
+RED = '\033[31m'
 
 # Version
 version = '0.1'
 
 def help():
-    print('''TinyGen ''' + version + '''\n
-Copyright 2017 Kevin Froman (MIT/Expat License) https://ChaosWebs.net/
+    print(GREEN + '''TinyGen ''' + RESET + version + '''\n
+Copyright 2017 Kevin Froman (MIT/Expat License) ''' + UNDERLINE + '''https://ChaosWebs.net/''' + RESET + '''
 
-''' + sys.argv[0] + ''' edit [page title] - create/edit a page
-''' + sys.argv[0] + ''' help - show this help message
-''' + sys.argv[0] + ''' rebuild - rebuild all pages
-''' + sys.argv[0] + ''' delete [page title] - delete a page
+''' + GREEN + sys.argv[0] + RESET + ''' edit [page title] - create/edit a page
+''' + GREEN + sys.argv[0] + RESET + ''' help - show this help message
+''' + GREEN + sys.argv[0] + RESET + ''' rebuild - rebuild all pages
+''' + GREEN + sys.argv[0] + RESET + ''' delete [page title] - delete a page
 
 Creating a website:
 
-    Do ''' + sys.argv[0] + ''' edit [post title] to start creating or editing a page
+    Do ''' + GREEN + sys.argv[0] + RESET + ''' edit [post title] to start creating or editing a page
 
     Open & edit ''' + cfgFile + ''' to change site metadata & the pages on the navigation bar.
 
-    Optionally edit source/theme.css to change the global styles.
-    Optionally edit source/page-template.html to change global markup
+    Optional: edit source/theme.css to change the global styles.
+    Optional: edit source/page-template.html to change global markup
 
 ''')
     return
@@ -59,7 +66,7 @@ def createFile(name):
 
 def fatalError(msg):
     # print a fatal error and exit with an error status code
-    print(msg)
+    print(RED + msg + RESET)
     sys.exit(1)
     return
 
@@ -145,7 +152,10 @@ if command == 'edit':
         newPostTitle = sys.argv[2]
     except IndexError:
         fatalError('syntax: edit "page title"')
-    generatePage(newPostTitle, True)
+    try:
+        generatePage(newPostTitle, True)
+    except:
+        fatalError('Unknown error occured')
 elif command == 'rebuild':
     rebuild()
 elif command == 'delete':
