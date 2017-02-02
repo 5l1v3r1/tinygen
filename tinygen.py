@@ -7,7 +7,7 @@ if sys.version_info.major == 2:
     sys.stderr.write('Python 2 is not supported. Please use Python 3.\n')
     sys.exit(1)
 
-import configparser, os, shutil, subprocess
+import configparser, os, shutil, subprocess, tgblog
 
 # configparser: needed for site configuration
 # os: cross platform file operations mostly
@@ -117,7 +117,7 @@ def rebuild():
     return
 
 command = ''
-newPostTitle = ''
+newPageTitle = ''
 
 # Create a config file if it doesnt exist or just load existing one
 
@@ -128,6 +128,8 @@ config = configparser.ConfigParser()
 config['SITE'] = {'title': 'My Site', 'author': 'anonymous', 'description': 'Welcome to my site!', 'footer': '', 'navbar pages': ''}
 
 deleteTitle = ''
+
+blogArg = ''
 
 if not os.path.exists(cfgFile):
     try:
@@ -149,11 +151,11 @@ except IndexError:
 
 if command == 'edit':
     try:
-        newPostTitle = sys.argv[2]
+        newPageTitle = sys.argv[2]
     except IndexError:
         fatalError('syntax: edit "page title"')
     try:
-        generatePage(newPostTitle, True)
+        generatePage(newPageTitle, True)
     except:
         fatalError('Unknown error occured')
 elif command == 'rebuild':
@@ -164,5 +166,14 @@ elif command == 'delete':
     except IndexError:
         fatalError('syntax: delete "page title"')
     deletePage(deleteTitle)
+elif command == 'blog':
+    try:
+        blogArg = sys.argv[2]
+    except IndexError:
+        fatalError('syntax: blog "blog command"')
+    try:
+        tgblog.blog(blogArg)
+    except:
+        fatalError('There was an error in the blog module')
 else:
     help()

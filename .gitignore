@@ -1,3 +1,4 @@
 generated/*.html
 generated/*.css
 source/pages/*.html
+__pycache__/*
