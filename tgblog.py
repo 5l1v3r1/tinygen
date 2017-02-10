@@ -1,7 +1,15 @@
 import sys, os, configparser, createDelete, subprocess, shutil
 # Copyright 2017 Kevin Froman - MIT License - https://ChaosWebs.net/
 
+def updatePostList(title):
+    return ('error', 'Not yet implemented')
+
 def rebuildIndex(config):
+    indexTemplate = open('source/blog-index.html', 'r').read()
+    indexTemplate.close()
+    currentPostList = ''
+    currentPostList = open('.data/postlist.txt', 'r').read()
+
     return ('success', 'successfully rebuilt index')
 
 def post(title, edit, config):
@@ -10,6 +18,7 @@ def post(title, edit, config):
     editP = ''
     result = ''
     post = ''
+    status = ''
     if edit:
         # If recieved arg to edit the file
         editP = subprocess.Popen((os.getenv('EDITOR'), 'source/posts/' + title + '.html'))
@@ -26,6 +35,11 @@ def post(title, edit, config):
     with open('generated/blog/' + title + '.html', 'w') as result:
         result.write(post)
     shutil.copyfile('source/theme.css', 'generated/blog/theme.css')
+
+    status = updatePostList(title)
+
+    content.close()
+    template.close()
     return ('success', 'Successfully generated page: ' + title)
 def blog(blogCmd, config):
     postTitle = ''
