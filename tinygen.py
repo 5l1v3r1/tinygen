@@ -7,7 +7,7 @@ if sys.version_info.major == 2:
     sys.stderr.write('Python 2 is not supported. Please use Python 3.\n')
     sys.exit(1)
 
-import configparser, os, shutil, subprocess, tgblog
+import configparser, os, shutil, subprocess, tgblog, createDelete
 
 # configparser: needed for site configuration
 # os: cross platform file operations mostly
@@ -44,26 +44,6 @@ Creating a website:
 ''')
     return
 
-def deletePage(name):
-    # Deletes a page from a site
-    try:
-        os.remove('source/pages/' + name + '.html')
-    except PermissionError:
-        print('Could not delete source file: ' + name + '. Reason: PermissionError')
-    try:
-        os.remove('generated/' + name + '.html')
-    except PermissionError:
-        print('Could not delete generated file: ' + name + '. Reason: PermissionError')
-    print('Successfully deleted page: ' + name)
-
-def createFile(name):
-    # Create a source file if it does not exist
-    if os.path.exists('source/pages/' + name + '.html'):
-        return
-    with open('source/pages/' + name + '.html', 'w') as place:
-        place.write('')
-    return
-
 def fatalError(msg):
     # print a fatal error and exit with an error status code
     print(RED + msg + RESET)
@@ -72,7 +52,7 @@ def fatalError(msg):
 
 def generatePage(title, edit):
     # (re)generate a webpage
-    createFile(title)
+    createDelete.createFile(title, 'page')
     navBarPages = config['SITE']['navbar pages'].replace(' ', '').split(',')
     navBar = '<ul id=\'navbar\'>'
     index = False # determines if the current file is the index
@@ -95,7 +75,6 @@ def generatePage(title, edit):
     page = template.replace('[{TITLE}]', title.title())
     page = page.replace('[{SITETITLE}]', config['SITE']['title'])
     page = page.replace('[{AUTHOR}]', config['SITE']['author'])
-    page = page.replace('[{SITETITLE}]', config['SITE']['title'])
     page = page.replace('[{CONTENT}]', content)
     page = page.replace('[{SITEFOOTER}]', config['SITE']['footer'])
     page = page.replace('[{NAVBAR}]', navBar)
@@ -126,10 +105,14 @@ cfgFile = 'config.cfg'
 config = configparser.ConfigParser()
 
 config['SITE'] = {'title': 'My Site', 'author': 'anonymous', 'description': 'Welcome to my site!', 'footer': '', 'navbar pages': ''}
+config['BLOG'] = {'title': 'My Blog', 'footer': '', 'lines-preview': '', 'blog intro': 'welcome to my blog!', 'description': ''}
 
 deleteTitle = ''
 
+# Blog variables, argument (command) and its return status
 blogArg = ''
+
+blogReturn = ''
 
 if not os.path.exists(cfgFile):
     try:
@@ -165,15 +148,17 @@ elif command == 'delete':
         deleteTitle = sys.argv[2]
     except IndexError:
         fatalError('syntax: delete "page title"')
-    deletePage(deleteTitle)
+    createDelete.deleteFile(deleteTitle, 'page')
 elif command == 'blog':
     try:
         blogArg = sys.argv[2]
     except IndexError:
-        fatalError('syntax: blog "blog command"')
-    try:
-        tgblog.blog(blogArg)
-    except:
-        fatalError('There was an error in the blog module')
+        fatalError('Blog takes at least 1 more argument')
+
+    blogReturn = tgblog.blog(blogArg, config)
+    if blogReturn[0] == 'error':
+        fatalError(blogReturn[1])
+    else:
+        print(blogReturn[1])
 else:
     help()
