@@ -44,6 +44,9 @@ Creating a website:
 ''')
     return
 
+def blogHelp():
+    print('blog help info')
+
 def fatalError(msg):
     # print a fatal error and exit with an error status code
     print(RED + msg + RESET)
@@ -153,7 +156,7 @@ elif command == 'blog':
     try:
         blogArg = sys.argv[2]
     except IndexError:
-        fatalError('Blog takes at least 1 more argument')
+        blogHelp()
 
     blogReturn = tgblog.blog(blogArg, config)
     if blogReturn[0] == 'error':
