@@ -2,26 +2,58 @@ import sys, os, configparser, createDelete, subprocess, shutil, sqlite3, time
 # Copyright 2017 Kevin Froman - MIT License - https://ChaosWebs.net/
 
 def updatePostList(title, add):
+    # add is either 'add' or 'remove'
     conn = sqlite3.connect('.data/posts.db')
     c = conn.cursor()
     if add == 'add':
         data = (title, str(int(time.time())))
-        c.execute('INSERT INTO Posts (title, date) Values (?,?)', (data,))
+        c.execute('INSERT INTO Posts (title, date) Values (?,?)', (data))
+        status = ('success', 'Added post to database: ' + title)
     elif add == 'remove':
         data = (title)
-        c.execute('DELETE FROM Posts where TITLE = ?', (data,))
+        c.execute('DELETE FROM Posts where TITLE = ?', (data))
+        status = ('success', 'Removed post from database: ' + title)
     conn.commit()
     conn.close()
 
-    return ('error', 'Not yet implemented')
+    return status
 
 def rebuildIndex(config):
+    indexTemplate = 'source/blog-index.html'
+    indexProdFile = 'generated/blog/index.html'
+    conn = sqlite3.connect('.data/posts.db')
+    content = ''
+    postList = ''
+    linesPreview = config['BLOG']['lines-preview']
+
+    currentIndex = open(indexTemplate, 'r').read()
+
+    c = conn.cursor()
+    print('Rebuilding index...')
+
+
+    for row in c.execute('SELECT * FROM Posts ORDER BY ID DESC'):
+        print('Adding ' + row[1] + ' to index...')
+        postList = postList + '<a href="' + row[1] + '.html"><h1>' + row[1] + '</h1></a>'
+
+    content = currentIndex.replace('[{SITETITLE}]', config['BLOG']['title'])
+    content = content.replace('[{SITEDESC}]', config['BLOG']['description'])
+    content = content.replace('[{AUTHOR}]', config['SITE']['AUTHOR'])
+    content = content.replace('[{NAVBAR}]', '')
+    content = content.replace('[{SITEFOOTER}]', config['BLOG']['footer'])
+    content = content.replace('[{POSTLIST}]', postList)
+
+    f = open(indexProdFile, 'w').write(content)
 
     return ('success', 'successfully rebuilt index')
 
 def post(title, edit, config):
     # optionally edit, then, generate a blog post
-    createDelete.createFile(title, 'post')
+    postExists = False
+    if os.path.exists('source/posts/' + title + '.html'):
+        postExists = True
+    else:
+        createDelete.createFile(title, 'post')
     editP = ''
     result = ''
     post = ''
@@ -43,13 +75,16 @@ def post(title, edit, config):
         result.write(post)
     shutil.copyfile('source/theme.css', 'generated/blog/theme.css')
 
-    status = updatePostList(title, 'add')
+    if not postExists:
+        status = updatePostList(title, 'add')
+
 
     return ('success', 'Successfully generated page: ' + title)
 def blog(blogCmd, config):
     postTitle = ''
     status = ('success', '') # Return status. 0 = error or not, 1 = return message
     indexError = False # If command doesn't get an argument, don't try to generate
+    fileError = False
     if blogCmd == 'edit':
         try:
             postTitle = sys.argv[3]
@@ -76,9 +111,15 @@ def blog(blogCmd, config):
                 createDelete.deleteFile(postTitle, 'posts')
             except FileNotFoundError:
                 status = ('error', 'Error encountered while deleting: ' + postTitle + ' reason: File does not exist')
+                fileError = True
             except:
                 status = ('error', 'Unknown error encountered while deleting: ' + postTitle)
-            updatePostList(postTitle, 'remove')
+                fileError = True
+            if not fileError:
+                try:
+                    status = updatePostList(postTitle, 'remove')
+                except:
+                    status = ('error', 'unknown error occured removing post from database')
     else:
         status = ('error', 'Invalid blog command')
     return status

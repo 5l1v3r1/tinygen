@@ -108,7 +108,7 @@ cfgFile = 'config.cfg'
 config = configparser.ConfigParser()
 
 config['SITE'] = {'title': 'My Site', 'author': 'anonymous', 'description': 'Welcome to my site!', 'footer': '', 'navbar pages': ''}
-config['BLOG'] = {'title': 'My Blog', 'footer': '', 'lines-preview': '', 'blog intro': 'welcome to my blog!', 'description': ''}
+config['BLOG'] = {'title': 'My Blog', 'footer': '', 'lines-preview': '5', 'blog intro': 'welcome to my blog!', 'description': ''}
 
 deleteTitle = ''
 
