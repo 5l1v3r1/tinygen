@@ -45,6 +45,8 @@ def rebuildIndex(config):
 
     f = open(indexProdFile, 'w').write(content)
 
+    conn.close()
+
     return ('success', 'successfully rebuilt index')
 
 def post(title, edit, config):
