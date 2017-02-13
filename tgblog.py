@@ -10,7 +10,7 @@ def updatePostList(title, add):
         c.execute('INSERT INTO Posts (title, date) Values (?,?)', (data))
         status = ('success', 'Added post to database: ' + title)
     elif add == 'remove':
-        data = (title)
+        data = (title,)
         c.execute('DELETE FROM Posts where TITLE = ?', (data))
         status = ('success', 'Removed post from database: ' + title)
     conn.commit()
@@ -78,6 +78,7 @@ def post(title, edit, config):
 
     if not postExists:
         status = updatePostList(title, 'add')
+        print(status[1])
 
 
     return ('success', 'Successfully generated page: ' + title)
@@ -119,17 +120,23 @@ def blog(blogCmd, config):
                 status = ('error', 'Unknown error encountered while deleting: ' + postTitle)
                 fileError = True
             if not fileError:
-                try:
-                    status = updatePostList(postTitle, 'remove')
-                except:
-                    status = ('error', 'unknown error occured removing post from database')
+                #try:
+                status = updatePostList(postTitle, 'remove')
+                #except:
+                   # status = ('error', 'unknown error occured removing post from database')
+                status = rebuildIndex(config)
     elif blogCmd == 'rebuild':
         print('Rebuilding posts')
         for file in os.listdir('generated/blog/'):
             if file.endswith('.html'):
                 if file != 'index.html':
                     file = file[:-5].strip().replace(' ','')
-                    post(file, False, config)
+                    try:
+                        post(file, False, config)
+                    except PermissionError:
+                        print('Could not rebuild ' + file + '. Reason: Permission error')
+                    except:
+                        print('Could not rebuild ' + file + '. Reason: unknown error occured.')
         print('Successfully rebuilt all posts.')
         # Rebuild index includes its own message about rebuilding
         rebuildIndex(config)
