@@ -71,11 +71,10 @@ def post(title, edit, config):
     post = post.replace('[{AUTHOR}]', config['SITE']['author'])
     post = post.replace('[{POSTCONTENT}]', content)
     post = post.replace('[{SITEFOOTER}]', config['BLOG']['footer'])
-    #post = post.replace('[{NAVBAR}]', navBar)
+    content = content.replace('[{NAVBAR}]', '')
     post = post.replace('[{SITEDESC}]', config['BLOG']['description'])
     with open('generated/blog/' + title + '.html', 'w') as result:
         result.write(post)
-    shutil.copyfile('source/theme.css', 'generated/blog/theme.css')
 
     if not postExists:
         status = updatePostList(title, 'add')
@@ -87,6 +86,7 @@ def blog(blogCmd, config):
     status = ('success', '') # Return status. 0 = error or not, 1 = return message
     indexError = False # If command doesn't get an argument, don't try to generate
     fileError = False
+    file = '' # file for rebuilding all operation
     if blogCmd == 'edit':
         try:
             postTitle = sys.argv[3]
@@ -96,6 +96,7 @@ def blog(blogCmd, config):
         if not indexError:
             #try:
             status = post(postTitle, True, config)
+            shutil.copyfile('source/theme.css', 'generated/blog/theme.css')
             if status[0] == 'success':
                 print(status[1]) # Print the status message of the last operation, generating the post. In this case it should be similar to 'successfully generated post'
                 print('Attempting to rebuild blog index...')
@@ -122,6 +123,17 @@ def blog(blogCmd, config):
                     status = updatePostList(postTitle, 'remove')
                 except:
                     status = ('error', 'unknown error occured removing post from database')
+    elif blogCmd == 'rebuild':
+        print('Rebuilding posts')
+        for file in os.listdir('generated/blog/'):
+            if file.endswith('.html'):
+                if file != 'index.html':
+                    file = file[:-5].strip().replace(' ','')
+                    post(file, False, config)
+        print('Successfully rebuilt all posts.')
+        # Rebuild index includes its own message about rebuilding
+        rebuildIndex(config)
+        status = ('success', 'Rebuild successful')
     else:
         status = ('error', 'Invalid blog command')
     return status
