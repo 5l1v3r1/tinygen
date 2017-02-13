@@ -3,3 +3,4 @@ generated/*.css
 source/pages/*.html
 source/posts/*.html
 __pycache__/*
+config.cfg
