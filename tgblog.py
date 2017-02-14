@@ -34,7 +34,7 @@ def rebuildIndex(config):
 
     for row in c.execute('SELECT * FROM Posts ORDER BY ID DESC'):
         print('Adding ' + row[1] + ' to index...')
-        postList = postList + '<a href="' + row[1] + '.html"><h1>' + row[1] + '</h1></a>'
+        postList = postList + '<a href="' + row[1] + '.html"><h2>' + row[1] + '</h2></a>'
 
     content = currentIndex.replace('[{SITETITLE}]', config['BLOG']['title'])
     content = content.replace('[{SITEDESC}]', config['BLOG']['description'])
@@ -71,7 +71,7 @@ def post(title, edit, config):
     post = post.replace('[{AUTHOR}]', config['SITE']['author'])
     post = post.replace('[{POSTCONTENT}]', content)
     post = post.replace('[{SITEFOOTER}]', config['BLOG']['footer'])
-    content = content.replace('[{NAVBAR}]', '')
+    post = post.replace('[{NAVBAR}]', '')
     post = post.replace('[{SITEDESC}]', config['BLOG']['description'])
     with open('generated/blog/' + title + '.html', 'w') as result:
         result.write(post)
@@ -79,8 +79,6 @@ def post(title, edit, config):
     if not postExists:
         status = updatePostList(title, 'add')
         print(status[1])
-
-
     return ('success', 'Successfully generated page: ' + title)
 def blog(blogCmd, config):
     postTitle = ''
@@ -90,18 +88,21 @@ def blog(blogCmd, config):
     file = '' # file for rebuilding all operation
     if blogCmd == 'edit':
         try:
-            postTitle = sys.argv[3]
+            postTitle = sys.argv[3].replace('<', '&lt;').replace('>', '&gt;')
         except IndexError:
             status = ('error', 'syntax: blog edit "post title"')
             indexError = True
         if not indexError:
             #try:
-            status = post(postTitle, True, config)
-            shutil.copyfile('source/theme.css', 'generated/blog/theme.css')
-            if status[0] == 'success':
-                print(status[1]) # Print the status message of the last operation, generating the post. In this case it should be similar to 'successfully generated post'
-                print('Attempting to rebuild blog index...')
-                status = rebuildIndex(config) # Rebuild the blog index page
+            if postTitle.lower() == 'index':
+                status = ('error', 'You cannot name a blog post \'index\'.')
+            else:
+                status = post(postTitle, True, config)
+                shutil.copyfile('source/theme.css', 'generated/blog/theme.css')
+                if status[0] == 'success':
+                    print(status[1]) # Print the status message of the last operation, generating the post. In this case it should be similar to 'successfully generated post'
+                    print('Attempting to rebuild blog index...')
+                    status = rebuildIndex(config) # Rebuild the blog index page
             #except:
                 #status = ('error', 'An unknown error occured')
     elif blogCmd == 'delete':
@@ -114,7 +115,7 @@ def blog(blogCmd, config):
             try:
                 createDelete.deleteFile(postTitle, 'posts')
             except FileNotFoundError:
-                status = ('error', 'Error encountered while deleting: ' + postTitle + ' reason: File does not exist')
+                status = ('error', 'Error encountered while deleting: ' + postTitle + ' reason: post does not exist')
                 fileError = True
             except:
                 status = ('error', 'Unknown error encountered while deleting: ' + postTitle)
@@ -126,6 +127,7 @@ def blog(blogCmd, config):
                    # status = ('error', 'unknown error occured removing post from database')
                 status = rebuildIndex(config)
     elif blogCmd == 'rebuild':
+        shutil.copyfile('source/theme.css', 'generated/blog/theme.css')
         print('Rebuilding posts')
         for file in os.listdir('generated/blog/'):
             if file.endswith('.html'):

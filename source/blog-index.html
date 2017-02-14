@@ -3,16 +3,22 @@
 <head>
   <meta charset='utf-8'>
   <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-  <title>[{SITETITLE}] - Blog</title>
+  <title>[{SITETITLE}] - Home</title>
   <meta name='description' content='[{SITEDESC}]'>
   <meta name='author' content='[{AUTHOR}]'>
   <link rel='icon' type='image/x-icon' href='/favicon.ico'>
   <link rel='stylesheet' href='theme.css'>
 </head>
 <body>
-  <h1 id='siteTitle'>[{SITETITLE}]</h1>
-  [{NAVBAR}]
-  <div id='postList'>[{POSTLIST}]</div>
-  <footer>[{SITEFOOTER}]</footer>
+    <div id="wrapper">
+      <h1 id='siteTitle'>[{SITETITLE}]</h1>
+      [{NAVBAR}]
+      <div id='postList' class='center'>[{POSTLIST}]</div>
+        <div id="push"></div>
+    </div>
+
+    <div id="footer">
+      <footer>[{SITEFOOTER}]</footer>
+    </div>
 </body>
 </html>

@@ -151,7 +151,10 @@ elif command == 'delete':
         deleteTitle = sys.argv[2]
     except IndexError:
         fatalError('syntax: delete "page title"')
-    createDelete.deleteFile(deleteTitle, 'page')
+    try:
+        createDelete.deleteFile(deleteTitle, 'page')
+    except FileNotFoundError:
+        fatalError('Could not delete page: ' + deleteTitle + ' reason: page does not exist.')
 elif command == 'blog':
     try:
         blogArg = sys.argv[2]
