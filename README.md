@@ -13,10 +13,13 @@ Currently only tested on Python 3.4.3 on Linux
 * ✅ Not complicated if you have cli experience
 * ✅ Straight forward light weight default template
 
-## Development Map:
+## Development Map (to do):
 
-* Static blog support
-* Compatibility with Windows & most *nix distros
-* Better output with color support
-* Plugin support
-* Multi site support
+- [x] Static blog support
+- [ ] Compatibility with Windows & most *nix distros
+- [x] Better output with color support
+- [ ] Plugin support
+- [ ] Theme support
+- [ ] Built in web server
+- [ ] Markdown support
+- [ ] Publish to free site hosting server
