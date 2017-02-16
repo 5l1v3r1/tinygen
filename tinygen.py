@@ -13,12 +13,21 @@ import configparser, os, shutil, subprocess, tgblog, createDelete
 # os: cross platform file operations mostly
 # sys: exit & version info
 # shutil: more file operations
+# markdown: self explainatory. Not in standard libs.
 
 # Ansi codes
 GREEN = '\033[92m'
 RESET = '\033[0m'
 UNDERLINE = '\033[04m'
 RED = '\033[31m'
+
+markdownSupport = True
+
+try:
+    import markdown
+except ImportError:
+    print(RED + 'Notice: ' + RESET + ' markdown library not installed. Try installing with pip.\nNot using markdown')
+    markdownSupport = False
 
 # Version
 version = '0.2'
@@ -66,7 +75,7 @@ def fatalError(msg):
     sys.exit(1)
     return
 
-def generatePage(title, edit):
+def generatePage(title, edit, pageFormat):
     # (re)generate a webpage
     createDelete.createFile(title, 'page')
     navBarPages = config['SITE']['navbar pages'].replace(' ', '').split(',')
@@ -88,6 +97,13 @@ def generatePage(title, edit):
             print('Unable to edit: ' + title + '. reason: editor environment variable is not set')
             return
     content = open('source/pages/' + title + '.html', 'r').read()
+
+    if pageFormat == 'markdown':
+        if markdownSupport:
+            content = markdown.markdown(content)
+        else:
+            fatalError('Specified markdown formatting, but markdown support is disabled.')
+
     template = open('source/page-template.html', 'r').read()
     if title == 'index':
         title = 'home'
@@ -124,12 +140,14 @@ cfgFile = 'config.cfg'
 
 config = configparser.ConfigParser()
 
-config['SITE'] = {'title': 'My Site', 'author': 'anonymous', 'description': 'Welcome to my site!', 'footer': '', 'navbar pages': ''}
+config['SITE'] = {'title': 'My Site', 'author': 'anonymous', 'description': 'Welcome to my site!', 'footer': '', 'navbar pages': '', 'formatting': 'html'}
 config['BLOG'] = {'title': 'My Blog', 'footer': '', 'lines-preview': '5', 'blog intro': 'welcome to my blog!', 'description': ''}
 
 deleteTitle = ''
 
 helpType = ''
+
+formatType = ''
 
 # Blog variables, argument (command) and its return status
 blogArg = ''
@@ -160,9 +178,21 @@ if command == 'edit':
     except IndexError:
         fatalError('syntax: edit "page title"')
     try:
-        generatePage(newPageTitle, True)
-    except:
-        fatalError('Unknown error occured')
+        # Try to get the formatting type. 'default' is specified in the configuration, with html being the default default
+        try:
+            formatType = sys.argv[3].lower()
+            if formatType not in ['default', 'markdown']:
+                fatalError('Invalid formatting type. Use \'Markdown\' or \'default\'')
+        except IndexError:
+            formatType = 'default'
+        if formatType == 'default':
+            try:
+                formatType = config['SITE']['formatting']
+            except KeyError:
+                fatalError('default formatting type specified, but not defined in config file.')
+        generatePage(newPageTitle, True, formatType)
+    except Exception as e:
+        fatalError('Unknown error occured: ' + str(e))
 elif command == 'rebuild':
     rebuild()
 elif command == 'delete':

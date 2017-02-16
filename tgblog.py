@@ -31,7 +31,6 @@ def rebuildIndex(config):
     c = conn.cursor()
     print('Rebuilding index...')
 
-
     for row in c.execute('SELECT * FROM Posts ORDER BY ID DESC'):
         print('Adding ' + row[1] + ' to index...')
         postList = postList + '<a href="' + row[1] + '.html"><h2>' + row[1] + '</h2></a>'
