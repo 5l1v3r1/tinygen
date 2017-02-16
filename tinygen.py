@@ -21,7 +21,7 @@ UNDERLINE = '\033[04m'
 RED = '\033[31m'
 
 # Version
-version = '0.1'
+version = '0.2'
 
 def help(helpType):
     print(GREEN + '''TinyGen ''' + RESET + version + '''\n
