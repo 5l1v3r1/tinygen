@@ -4,6 +4,8 @@ A simple website generator written in Python
 
 Work in progress, but basic features done.
 
+** TinyGen is in early stages. It is not ready for production use. **
+
 Currently only tested on Python 3.4.3 on Linux
 
 ## Current features:
