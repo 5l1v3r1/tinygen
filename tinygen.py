@@ -68,8 +68,12 @@ def generatePage(title, edit):
         navBar = navBar + '<li class="navBarItem"><a href="' + i + '.html">' + link.title() + '</a> </li>'
     navBar = navBar + '</ul>'
     if edit:
-        editP = subprocess.Popen((os.getenv('EDITOR'), 'source/pages/' + title + '.html'))
-        editP.wait()
+        try:
+            editP = subprocess.Popen((os.getenv('EDITOR'), 'source/posts/' + title + '.html'))
+            editP.wait()
+        except TypeError:
+            print('Unable to edit: ' + title + '. reason: editor environment variable is not set')
+            return
     content = open('source/pages/' + title + '.html', 'r').read()
     template = open('source/page-template.html', 'r').read()
     if title == 'index':

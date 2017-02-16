@@ -59,11 +59,14 @@ def post(title, edit, config):
     editP = ''
     result = ''
     post = ''
-    status = ''
+    status = status = ('success', '')
     if edit:
         # If recieved arg to edit the file
-        editP = subprocess.Popen((os.getenv('EDITOR'), 'source/posts/' + title + '.html'))
-        editP.wait()
+        try:
+            editP = subprocess.Popen((os.getenv('EDITOR'), 'source/posts/' + title + '.html'))
+            editP.wait()
+        except TypeError:
+            status = ('error', 'Unable to edit: ' + title + '. reason: editor environment variable is not set.')
     content = open('source/posts/' + title + '.html', 'r').read()
     template = open('source/blog-template.html', 'r').read()
     post = template.replace('[{POSTTITLE}]', title.title())
@@ -75,11 +78,12 @@ def post(title, edit, config):
     post = post.replace('[{SITEDESC}]', config['BLOG']['description'])
     with open('generated/blog/' + title + '.html', 'w') as result:
         result.write(post)
-
-    if not postExists:
-        status = updatePostList(title, 'add')
-        print(status[1])
-    return ('success', 'Successfully generated page: ' + title)
+    if status[1] != 'error':
+        if not postExists:
+            status = updatePostList(title, 'add')
+            print(status[1])
+            status = ('success', 'Successfully generated page: ' + title)
+    return status
 def blog(blogCmd, config):
     postTitle = ''
     status = ('success', '') # Return status. 0 = error or not, 1 = return message
