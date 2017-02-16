@@ -8,6 +8,9 @@ then
   exit 0
 fi
 
+rm generated/*.html
+rm generated/*.css
+echo "Cleaned site index and css"
 rm generated/blog/*.html
 rm generated/blog/*.css
 echo "Cleaned generated/blog"

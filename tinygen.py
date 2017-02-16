@@ -23,14 +23,16 @@ RED = '\033[31m'
 # Version
 version = '0.1'
 
-def help():
+def help(helpType):
     print(GREEN + '''TinyGen ''' + RESET + version + '''\n
-Copyright 2017 Kevin Froman (MIT/Expat License) ''' + UNDERLINE + '''https://ChaosWebs.net/''' + RESET + '''
+Copyright 2017 Kevin Froman (MIT/Expat License) ''' + UNDERLINE + '''https://ChaosWebs.net/''' + RESET + '\n')
 
-''' + GREEN + sys.argv[0] + RESET + ''' edit [page title] - create/edit a page
+    if helpType == 'normal':
+        print(GREEN + sys.argv[0] + RESET + ''' edit [page title] - create/edit a page
 ''' + GREEN + sys.argv[0] + RESET + ''' help - show this help message
 ''' + GREEN + sys.argv[0] + RESET + ''' rebuild - rebuild all pages
-''' + GREEN + sys.argv[0] + RESET + ''' delete [page title] - delete a page
+''' + GREEN + sys.argv[0] + RESET + ''' delete [page title] - delete a page ''' +
+'''
 
 Creating a website:
 
@@ -39,13 +41,24 @@ Creating a website:
     Open & edit ''' + cfgFile + ''' to change site metadata & the pages on the navigation bar.
 
     Optional: edit source/theme.css to change the global styles.
-    Optional: edit source/page-template.html to change global markup
+    Optional: edit source/page-template.html to change global markup\n''')
 
-''')
+    elif helpType == 'blog':
+                print(GREEN + sys.argv[0] + RESET + ''' blog edit [post title] - create/edit a page
+        ''' + GREEN + sys.argv[0] + RESET + ''' blog rebuild - rebuild all posts
+        ''' + GREEN + sys.argv[0] + RESET + ''' blog delete [posts title] - delete a post ''' +
+        '''
+
+        Creating a blog:
+
+            Do ''' + GREEN + sys.argv[0] + RESET + ''' edit [post title] to start creating or editing a post
+
+            Open & edit ''' + cfgFile + ''' to change site metadata & the links on the navigation bar.
+
+            Optional: edit source/theme.css to change the global styles.
+            Optional: edit source/blog-index.html to change the blog index.
+            Optional: edit source/blog-template.html to change global markup\n''')
     return
-
-def blogHelp():
-    print('blog help info')
 
 def fatalError(msg):
     # print a fatal error and exit with an error status code
@@ -116,6 +129,8 @@ config['BLOG'] = {'title': 'My Blog', 'footer': '', 'lines-preview': '5', 'blog 
 
 deleteTitle = ''
 
+helpType = ''
+
 # Blog variables, argument (command) and its return status
 blogArg = ''
 
@@ -163,12 +178,18 @@ elif command == 'blog':
     try:
         blogArg = sys.argv[2]
     except IndexError:
-        blogHelp()
+        help('blog')
 
     blogReturn = tgblog.blog(blogArg, config)
     if blogReturn[0] == 'error':
         fatalError(blogReturn[1])
     else:
         print(blogReturn[1])
+elif command == 'help':
+    try:
+        helpType = sys.argv[2]
+        help('blog')
+    except IndexError:
+        help('normal')
 else:
-    help()
+    help('normal')
