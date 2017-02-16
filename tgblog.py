@@ -136,7 +136,7 @@ def blog(blogCmd, config):
         for file in os.listdir('generated/blog/'):
             if file.endswith('.html'):
                 if file != 'index.html':
-                    file = file[:-5].strip().replace(' ','')
+                    file = file[:-5].strip()
                     try:
                         post(file, False, config)
                     except PermissionError:
