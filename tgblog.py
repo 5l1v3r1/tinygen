@@ -1,5 +1,12 @@
-import sys, os, configparser, createDelete, subprocess, shutil, sqlite3, time
 # Copyright 2017 Kevin Froman - MIT License - https://ChaosWebs.net/
+import sys, os, configparser, createDelete, subprocess, shutil, sqlite3, time
+
+markdownSupport = True
+try:
+    import markdown
+except ImportError:
+    markdownSupport = False
+    print("FUCK")
 
 def updatePostList(title, add):
     # add is either 'add' or 'remove'
@@ -48,7 +55,7 @@ def rebuildIndex(config):
 
     return ('success', 'successfully rebuilt index')
 
-def post(title, edit, config):
+def post(title, edit, config, postFormat):
     # optionally edit, then, generate a blog post
     postExists = False
     if os.path.exists('source/posts/' + title + '.html'):
@@ -67,6 +74,12 @@ def post(title, edit, config):
         except TypeError:
             status = ('error', 'Unable to edit: ' + title + '. reason: editor environment variable is not set.')
     content = open('source/posts/' + title + '.html', 'r').read()
+    if postFormat == 'markdown':
+        if markdownSupport:
+            content = markdown.markdown(content)
+        else:
+            status = ('error', 'Specified markdown formatting, but markdown support is disabled.')
+
     template = open('source/blog-template.html', 'r').read()
     post = template.replace('[{POSTTITLE}]', title.title())
     post = post.replace('[{SITETITLE}]', config['BLOG']['title'])
@@ -83,11 +96,12 @@ def post(title, edit, config):
             print(status[1])
             status = ('success', 'Successfully generated page: ' + title)
     return status
-def blog(blogCmd, config):
+def blog(blogCmd, config, markdownSupport):
     postTitle = ''
     status = ('success', '') # Return status. 0 = error or not, 1 = return message
     indexError = False # If command doesn't get an argument, don't try to generate
     fileError = False
+    formatType = ''
     file = '' # file for rebuilding all operation
     if blogCmd == 'edit':
         try:
@@ -100,7 +114,18 @@ def blog(blogCmd, config):
             if postTitle.lower() == 'index':
                 status = ('error', 'You cannot name a blog post \'index\'.')
             else:
-                status = post(postTitle, True, config)
+                try:
+                    formatType = sys.argv[4].lower()
+                    if formatType not in ['default', 'markdown']:
+                        status = ('error', 'Invalid formatting type. Use \'Markdown\' or \'default\'')
+                except IndexError:
+                    formatType = 'default'
+                if formatType == 'default':
+                    try:
+                        formatType = config['SITE']['formatting']
+                    except KeyError:
+                        status = ('error', 'default formatting type specified, but not defined in config file.')
+                status = post(postTitle, True, config, formatType)
                 shutil.copyfile('source/theme.css', 'generated/blog/theme.css')
                 if status[0] == 'success':
                     print(status[1]) # Print the status message of the last operation, generating the post. In this case it should be similar to 'successfully generated post'

@@ -26,7 +26,7 @@ markdownSupport = True
 try:
     import markdown
 except ImportError:
-    print(RED + 'Notice: ' + RESET + ' markdown library not installed. Try installing with pip.\nNot using markdown')
+    print(RED + 'Notice: ' + RESET + ' markdown library not installed. Try installing with pip.\nWill not be able to use markdown.')
     markdownSupport = False
 
 # Version
@@ -168,7 +168,7 @@ except PermissionError:
 # Parse commands
 
 try:
-    command = sys.argv[1]
+    command = sys.argv[1].lower()
 except IndexError:
     command = 'help'
 
@@ -206,11 +206,11 @@ elif command == 'delete':
         fatalError('Could not delete page: ' + deleteTitle + ' reason: page does not exist.')
 elif command == 'blog':
     try:
-        blogArg = sys.argv[2]
+        blogArg = sys.argv[2].lower()
     except IndexError:
         help('blog')
 
-    blogReturn = tgblog.blog(blogArg, config)
+    blogReturn = tgblog.blog(blogArg, config, markdownSupport)
     if blogReturn[0] == 'error':
         fatalError(blogReturn[1])
     else:
