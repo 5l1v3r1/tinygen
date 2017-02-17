@@ -21,5 +21,5 @@ Currently only tested on Python 3.4.3 on Linux
 - [ ] Plugin support
 - [ ] Theme support
 - [ ] Built in web server
-- [ ] Markdown support
+- [X] Markdown support
 - [ ] Publish to free site hosting server
