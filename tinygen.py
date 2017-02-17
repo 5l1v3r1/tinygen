@@ -49,7 +49,7 @@ Creating a website:
 
     Open & edit ''' + cfgFile + ''' to change site metadata & the pages on the navigation bar.
 
-    Optional: edit source/theme.css to change the global styles.
+    Optional: edit source/theme/theme.css to change the global styles.
     Optional: edit source/page-template.html to change global markup\n''')
 
     elif helpType == 'blog':
@@ -64,7 +64,7 @@ Creating a website:
 
             Open & edit ''' + cfgFile + ''' to change site metadata & the links on the navigation bar.
 
-            Optional: edit source/theme.css to change the global styles.
+            Optional: edit source/theme/theme.css to change the global styles.
             Optional: edit source/blog-index.html to change the blog index.
             Optional: edit source/blog-template.html to change global markup\n''')
     return
@@ -116,7 +116,7 @@ def generatePage(title, edit):
         title = 'index'
     with open('generated/' + title + '.html', 'w') as result:
         result.write(page)
-    shutil.copyfile('source/theme.css', 'generated/theme.css')
+    shutil.copyfile('source/theme/theme.css', 'generated/theme.css')
     print('Successfully generated page: ' + title)
     return
 
@@ -138,7 +138,7 @@ cfgFile = 'config.cfg'
 config = configparser.ConfigParser()
 
 config['SITE'] = {'title': 'My Site', 'author': 'anonymous', 'description': 'Welcome to my site!', 'footer': 'Powered By TinyGen', 'navbar pages': '', 'formatting': 'html'}
-config['BLOG'] = {'title': 'My Blog', 'footer': 'Powered by TinyGen', 'lines-preview': '3', 'blog intro': 'welcome to my blog!', 'description': ''}
+config['BLOG'] = {'title': 'My Blog', 'footer': 'Powered by TinyGen', 'lines-preview': '3', 'blog intro': 'welcome to my blog!', 'description': '', 'twitter': '', 'github': '', 'facebook': '', 'email': '', 'keybase': ''}
 
 deleteTitle = ''
 

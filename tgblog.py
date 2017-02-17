@@ -1,5 +1,5 @@
 # Copyright 2017 Kevin Froman - MIT License - https://ChaosWebs.net/
-import sys, os, configparser, createDelete, subprocess, shutil, sqlite3, time, datetime
+import sys, os, configparser, createDelete, subprocess, shutil, sqlite3, time, datetime, tgsocial
 
 markdownSupport = True
 try:
@@ -76,6 +76,7 @@ def rebuildIndex(config):
     content = content.replace('[{NAVBAR}]', '')
     content = content.replace('[{SITEFOOTER}]', config['BLOG']['footer'])
     content = content.replace('[{POSTLIST}]', postList)
+    content = tgsocial.genSocial(config, content)
 
     f = open(indexProdFile, 'w').write(content)
 
@@ -119,6 +120,7 @@ def post(title, edit, config):
     post = post.replace('[{NAVBAR}]', '')
     post = post.replace('[{SITEDESC}]', config['BLOG']['description'])
     post = post.replace('[{POSTDATE}]', date)
+    post = tgsocial.genSocial(config, post)
     with open('generated/blog/' + title + '.html', 'w') as result:
         result.write(post)
     if status[1] != 'error':
@@ -146,13 +148,11 @@ def blog(blogCmd, config):
                 status = ('error', 'You cannot name a blog post \'index\'.')
             else:
                 status = post(postTitle, True, config)
-                shutil.copyfile('source/theme.css', 'generated/blog/theme.css')
+                shutil.copyfile('source/theme/theme.css', 'generated/blog/theme.css')
                 if status[0] == 'success':
                     print(status[1]) # Print the status message of the last operation, generating the post. In this case it should be similar to 'successfully generated post'
                     print('Attempting to rebuild blog index...')
                     status = rebuildIndex(config) # Rebuild the blog index page
-            #except:
-                #status = ('error', 'An unknown error occured')
     elif blogCmd == 'delete':
         try:
             postTitle = sys.argv[3]
@@ -175,7 +175,9 @@ def blog(blogCmd, config):
                     status = ('error', 'error occured removing post from database: ' + str(e))
                 status = rebuildIndex(config)
     elif blogCmd == 'rebuild':
-        shutil.copyfile('source/theme.css', 'generated/blog/theme.css')
+        shutil.copyfile('source/theme/theme.css', 'generated/blog/theme.css')
+        shutil.rmtree('generated/images/')
+        shutil.copytree('source/theme/images/', 'generated/images/')
         print('Rebuilding posts')
         for file in os.listdir('generated/blog/'):
             if file.endswith('.html'):
@@ -185,8 +187,8 @@ def blog(blogCmd, config):
                         post(file, False, config)
                     except PermissionError:
                         print('Could not rebuild ' + file + '. Reason: Permission error')
-                    #except Exception as e:
-                        #print('Could not rebuild ' + file + '. Reason: ' + str(e))
+                    except Exception as e:
+                        print('Could not rebuild ' + file + '. Reason: ' + str(e))
         print('Successfully rebuilt all posts.')
         # Rebuild index includes its own message about rebuilding
         rebuildIndex(config)

@@ -10,7 +10,8 @@ fi
 
 rm generated/*.html
 rm generated/*.css
-echo "Cleaned site index and css"
+rm -rf generated/images/
+echo "Cleaned site index, css, and images"
 rm generated/blog/*.html
 rm generated/blog/*.css
 echo "Cleaned generated/blog"
