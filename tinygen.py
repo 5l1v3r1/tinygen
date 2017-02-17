@@ -75,7 +75,7 @@ def fatalError(msg):
     sys.exit(1)
     return
 
-def generatePage(title, edit, pageFormat):
+def generatePage(title, edit):
     # (re)generate a webpage
     createDelete.createFile(title, 'page')
     navBarPages = config['SITE']['navbar pages'].replace(' ', '').split(',')
@@ -98,11 +98,8 @@ def generatePage(title, edit, pageFormat):
             return
     content = open('source/pages/' + title + '.html', 'r').read()
 
-    if pageFormat == 'markdown':
-        if markdownSupport:
-            content = markdown.markdown(content)
-        else:
-            fatalError('Specified markdown formatting, but markdown support is disabled.')
+    if markdownSupport:
+        content = markdown.markdown(content)
 
     template = open('source/page-template.html', 'r').read()
     if title == 'index':
@@ -128,7 +125,7 @@ def rebuild():
     for file in os.listdir('source/pages/'):
         if file.endswith('.html'):
             file = file.replace('.html', '')
-            generatePage(file, False, formatType)
+            generatePage(file, False)
     return
 
 command = ''
@@ -178,19 +175,7 @@ if command == 'edit':
     except IndexError:
         fatalError('syntax: edit "page title"')
     try:
-        # Try to get the formatting type. 'default' is specified in the configuration, with html being the default default
-        try:
-            formatType = sys.argv[3].lower()
-            if formatType not in ['default', 'markdown']:
-                fatalError('Invalid formatting type. Use \'Markdown\' or \'default\'')
-        except IndexError:
-            formatType = 'default'
-        if formatType == 'default':
-            try:
-                formatType = config['SITE']['formatting']
-            except KeyError:
-                fatalError('default formatting type specified, but not defined in config file.')
-        generatePage(newPageTitle, True, formatType)
+        generatePage(newPageTitle, True)
     except Exception as e:
         fatalError('Unknown error occured: ' + str(e))
 elif command == 'rebuild':
@@ -210,7 +195,7 @@ elif command == 'blog':
     except IndexError:
         help('blog')
 
-    blogReturn = tgblog.blog(blogArg, config, markdownSupport)
+    blogReturn = tgblog.blog(blogArg, config)
     if blogReturn[0] == 'error':
         fatalError(blogReturn[1])
     else:

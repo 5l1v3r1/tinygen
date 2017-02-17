@@ -10,6 +10,7 @@ except ImportError:
 def getPostDate(title):
     conn = sqlite3.connect('.data/posts.db')
     c = conn.cursor()
+    date = 0
     data = (title,)
     for row in c.execute('SELECT DATE FROM Posts where title=?', (data)):
         date = row[0]
@@ -66,7 +67,7 @@ def rebuildIndex(config):
             pass
         previewFile.close()
         if linesPreview > 0:
-            postList = postList + '...'
+            postList = postList + '<a href="' + row[1] + '.html">...</a>'
         postList = postList + '</div>'
 
     content = currentIndex.replace('[{SITETITLE}]', config['BLOG']['title'])
@@ -82,7 +83,7 @@ def rebuildIndex(config):
 
     return ('success', 'successfully rebuilt index')
 
-def post(title, edit, config, postFormat):
+def post(title, edit, config):
     # optionally edit, then, generate a blog post
     postExists = False
     if os.path.exists('source/posts/' + title + '.html'):
@@ -106,11 +107,8 @@ def post(title, edit, config, postFormat):
         except TypeError:
             status = ('error', 'Unable to edit: ' + title + '. reason: editor environment variable is not set.')
     content = open('source/posts/' + title + '.html', 'r').read()
-    if postFormat == 'markdown':
-        if markdownSupport:
+    if markdownSupport:
             content = markdown.markdown(content)
-        else:
-            status = ('error', 'Specified markdown formatting, but markdown support is disabled.')
 
     template = open('source/blog-template.html', 'r').read()
     post = template.replace('[{POSTTITLE}]', title.title())
@@ -129,7 +127,7 @@ def post(title, edit, config, postFormat):
             print(status[1])
             status = ('success', 'Successfully generated page: ' + title)
     return status
-def blog(blogCmd, config, markdownSupport):
+def blog(blogCmd, config):
     postTitle = ''
     status = ('success', '') # Return status. 0 = error or not, 1 = return message
     indexError = False # If command doesn't get an argument, don't try to generate
@@ -147,18 +145,7 @@ def blog(blogCmd, config, markdownSupport):
             if postTitle.lower() == 'index':
                 status = ('error', 'You cannot name a blog post \'index\'.')
             else:
-                try:
-                    formatType = sys.argv[4].lower()
-                    if formatType not in ['default', 'markdown']:
-                        status = ('error', 'Invalid formatting type. Use \'Markdown\' or \'default\'')
-                except IndexError:
-                    formatType = 'default'
-                if formatType == 'default':
-                    try:
-                        formatType = config['SITE']['formatting']
-                    except KeyError:
-                        status = ('error', 'default formatting type specified, but not defined in config file.')
-                status = post(postTitle, True, config, formatType)
+                status = post(postTitle, True, config)
                 shutil.copyfile('source/theme.css', 'generated/blog/theme.css')
                 if status[0] == 'success':
                     print(status[1]) # Print the status message of the last operation, generating the post. In this case it should be similar to 'successfully generated post'
@@ -179,13 +166,13 @@ def blog(blogCmd, config, markdownSupport):
                 status = ('error', 'Error encountered while deleting: ' + postTitle + ' reason: post does not exist')
                 fileError = True
             except Exception as e:
-                status = ('error', 'Error encountered while deleting: ' + postTitle + ': ' + e)
+                status = ('error', 'Error encountered while deleting: ' + postTitle + ': ' + str(e))
                 fileError = True
             if not fileError:
                 try:
                     status = updatePostList(postTitle, 'remove')
                 except Exception as e:
-                    status = ('error', 'error occured removing post from database: ' + e)
+                    status = ('error', 'error occured removing post from database: ' + str(e))
                 status = rebuildIndex(config)
     elif blogCmd == 'rebuild':
         shutil.copyfile('source/theme.css', 'generated/blog/theme.css')
@@ -195,11 +182,11 @@ def blog(blogCmd, config, markdownSupport):
                 if file != 'index.html':
                     file = file[:-5].strip()
                     try:
-                        post(file, False, config, formatType)
+                        post(file, False, config)
                     except PermissionError:
                         print('Could not rebuild ' + file + '. Reason: Permission error')
-                    except Exception as e:
-                        print('Could not rebuild ' + file + '. Reason: ' + e)
+                    #except Exception as e:
+                        #print('Could not rebuild ' + file + '. Reason: ' + str(e))
         print('Successfully rebuilt all posts.')
         # Rebuild index includes its own message about rebuilding
         rebuildIndex(config)
