@@ -128,7 +128,7 @@ def rebuild():
     for file in os.listdir('source/pages/'):
         if file.endswith('.html'):
             file = file.replace('.html', '')
-            generatePage(file, False)
+            generatePage(file, False, formatType)
     return
 
 command = ''
@@ -140,8 +140,8 @@ cfgFile = 'config.cfg'
 
 config = configparser.ConfigParser()
 
-config['SITE'] = {'title': 'My Site', 'author': 'anonymous', 'description': 'Welcome to my site!', 'footer': '', 'navbar pages': '', 'formatting': 'html'}
-config['BLOG'] = {'title': 'My Blog', 'footer': '', 'lines-preview': '5', 'blog intro': 'welcome to my blog!', 'description': ''}
+config['SITE'] = {'title': 'My Site', 'author': 'anonymous', 'description': 'Welcome to my site!', 'footer': 'Powered By TinyGen', 'navbar pages': '', 'formatting': 'html'}
+config['BLOG'] = {'title': 'My Blog', 'footer': 'Powered by TinyGen', 'lines-preview': '3', 'blog intro': 'welcome to my blog!', 'description': ''}
 
 deleteTitle = ''
 

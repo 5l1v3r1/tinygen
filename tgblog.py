@@ -1,12 +1,21 @@
 # Copyright 2017 Kevin Froman - MIT License - https://ChaosWebs.net/
-import sys, os, configparser, createDelete, subprocess, shutil, sqlite3, time
+import sys, os, configparser, createDelete, subprocess, shutil, sqlite3, time, datetime
 
 markdownSupport = True
 try:
     import markdown
 except ImportError:
     markdownSupport = False
-    print("FUCK")
+
+def getPostDate(title):
+    conn = sqlite3.connect('.data/posts.db')
+    c = conn.cursor()
+    data = (title,)
+    for row in c.execute('SELECT DATE FROM Posts where title=?', (data)):
+        date = row[0]
+    #status = ('success', 'Added post to database: ' + title)
+    conn.close()
+    return date
 
 def updatePostList(title, add):
     # add is either 'add' or 'remove'
@@ -31,7 +40,9 @@ def rebuildIndex(config):
     conn = sqlite3.connect('.data/posts.db')
     content = ''
     postList = ''
-    linesPreview = config['BLOG']['lines-preview']
+    linesPreview = int(config['BLOG']['lines-preview'])
+    previewText = ''
+    previewFile = ''
 
     currentIndex = open(indexTemplate, 'r').read()
 
@@ -39,8 +50,24 @@ def rebuildIndex(config):
     print('Rebuilding index...')
 
     for row in c.execute('SELECT * FROM Posts ORDER BY ID DESC'):
+        previewFile = open('source/posts/' + row[1] + '.html')
+        previewText = previewFile.read()
         print('Adding ' + row[1] + ' to index...')
-        postList = postList + '<a href="' + row[1] + '.html"><h2>' + row[1] + '</h2></a>'
+        postList = postList + '<a href="' + row[1] + '.html"><h2>' + row[1].title() + '</h2></a>'
+        postList = postList + '<div class="postDate">' + datetime.datetime.fromtimestamp(int(row[2])).strftime('%Y-%m-%d') + '</div>'
+        postList = postList + '<div class="postPreview">'
+        try:
+            for x in range(0, linesPreview):
+                if markdownSupport:
+                    postList = postList + markdown.markdown(previewText.splitlines()[x])
+                else:
+                    postList = postList + previewText.splitlines()[x]
+        except IndexError:
+            pass
+        previewFile.close()
+        if linesPreview > 0:
+            postList = postList + '...'
+        postList = postList + '</div>'
 
     content = currentIndex.replace('[{SITETITLE}]', config['BLOG']['title'])
     content = content.replace('[{SITEDESC}]', config['BLOG']['description'])
@@ -66,6 +93,11 @@ def post(title, edit, config, postFormat):
     result = ''
     post = ''
     status = status = ('success', '')
+    if not edit:
+        date = getPostDate(title)
+        date = datetime.datetime.fromtimestamp(int(date)).strftime('%Y-%m-%d')
+    else:
+        date = datetime.datetime.fromtimestamp(int(time.time())).strftime('%Y-%m-%d')
     if edit:
         # If recieved arg to edit the file
         try:
@@ -88,6 +120,7 @@ def post(title, edit, config, postFormat):
     post = post.replace('[{SITEFOOTER}]', config['BLOG']['footer'])
     post = post.replace('[{NAVBAR}]', '')
     post = post.replace('[{SITEDESC}]', config['BLOG']['description'])
+    post = post.replace('[{POSTDATE}]', date)
     with open('generated/blog/' + title + '.html', 'w') as result:
         result.write(post)
     if status[1] != 'error':
@@ -145,14 +178,14 @@ def blog(blogCmd, config, markdownSupport):
             except FileNotFoundError:
                 status = ('error', 'Error encountered while deleting: ' + postTitle + ' reason: post does not exist')
                 fileError = True
-            except:
-                status = ('error', 'Unknown error encountered while deleting: ' + postTitle)
+            except Exception as e:
+                status = ('error', 'Error encountered while deleting: ' + postTitle + ': ' + e)
                 fileError = True
             if not fileError:
-                #try:
-                status = updatePostList(postTitle, 'remove')
-                #except:
-                   # status = ('error', 'unknown error occured removing post from database')
+                try:
+                    status = updatePostList(postTitle, 'remove')
+                except Exception as e:
+                    status = ('error', 'error occured removing post from database: ' + e)
                 status = rebuildIndex(config)
     elif blogCmd == 'rebuild':
         shutil.copyfile('source/theme.css', 'generated/blog/theme.css')
@@ -162,11 +195,11 @@ def blog(blogCmd, config, markdownSupport):
                 if file != 'index.html':
                     file = file[:-5].strip()
                     try:
-                        post(file, False, config)
+                        post(file, False, config, formatType)
                     except PermissionError:
                         print('Could not rebuild ' + file + '. Reason: Permission error')
-                    except:
-                        print('Could not rebuild ' + file + '. Reason: unknown error occured.')
+                    except Exception as e:
+                        print('Could not rebuild ' + file + '. Reason: ' + e)
         print('Successfully rebuilt all posts.')
         # Rebuild index includes its own message about rebuilding
         rebuildIndex(config)
