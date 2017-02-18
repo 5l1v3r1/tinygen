@@ -23,4 +23,4 @@ Currently only tested on Python 3.4.3 on Linux
 - [ ] Built in web server
 - [x] Markdown support
 - [ ] Publish to free site hosting server
-- [ ] RSS Blog Feeds
+- [x] RSS Blog Feeds
