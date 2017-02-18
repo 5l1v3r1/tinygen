@@ -76,7 +76,7 @@ def rebuildIndex(config):
     content = content.replace('[{NAVBAR}]', '')
     content = content.replace('[{SITEFOOTER}]', config['BLOG']['footer'])
     content = content.replace('[{POSTLIST}]', postList)
-    content = tgsocial.genSocial(config, content)
+    content = tgsocial.genSocial(config, content, 'post')
 
     f = open(indexProdFile, 'w').write(content)
 
@@ -120,7 +120,7 @@ def post(title, edit, config):
     post = post.replace('[{NAVBAR}]', '')
     post = post.replace('[{SITEDESC}]', config['BLOG']['description'])
     post = post.replace('[{POSTDATE}]', date)
-    post = tgsocial.genSocial(config, post)
+    post = tgsocial.genSocial(config, post, 'post')
     with open('generated/blog/' + title + '.html', 'w') as result:
         result.write(post)
     if status[1] != 'error':

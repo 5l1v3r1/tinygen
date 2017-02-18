@@ -2,9 +2,12 @@
 import configparser
 
 # Generate social link tags
-def genSocial(config, content):
+def genSocial(config, content, postType):
     loopCount = 0
-    socialImage = '../images/'
+    if postType == 'post':
+        socialImage = '../images/'
+    else:
+        socialImage = './images/'
 
     socialLinks = [config['BLOG']['twitter'], config['BLOG']['facebook'], config['BLOG']['github'], config['BLOG']['email'], config['BLOG']['keybase'], config['BLOG']['google']]
     socialLinkTags = ['[{TWITTER}]', '[{FACEBOOK}]', '[{GITHUB}]', '[{EMAIL}]', '[{KEYBASE}]', '[{GOOGLE}]']
@@ -30,7 +33,10 @@ def genSocial(config, content):
                 content = content.replace(x, '<a class="socialLink" href="' + socialLinks[loopCount].replace('\'', '') + '"><img src="' + socialImage + '" alt="' + x.replace('[', '').replace(']', '').replace('{', '').replace('}', '') + '"></a>')
             else:
                 content = content.replace(x, '')
-            socialImage = '../images/'
+            if postType == 'post':
+                socialImage = '../images/'
+            else:
+                socialImage = './images/'
         except KeyError:
             content = content.replace(x, '')
         loopCount = loopCount + 1

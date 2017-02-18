@@ -7,7 +7,7 @@ if sys.version_info.major == 2:
     sys.stderr.write('Python 2 is not supported. Please use Python 3.\n')
     sys.exit(1)
 
-import configparser, os, shutil, subprocess, tgblog, createDelete
+import configparser, os, shutil, subprocess, tgblog, createDelete, tgsocial
 
 # configparser: needed for site configuration
 # os: cross platform file operations mostly
@@ -112,11 +112,17 @@ def generatePage(title, edit):
     page = page.replace('[{SITEFOOTER}]', config['SITE']['footer'])
     page = page.replace('[{NAVBAR}]', navBar)
     page = page.replace('[{SITEDESC}]', config['SITE']['description'])
+    page = tgsocial.genSocial(config, page, 'page')
     if index:
         title = 'index'
     with open('generated/' + title + '.html', 'w') as result:
         result.write(page)
     shutil.copyfile('source/theme/theme.css', 'generated/theme.css')
+    try:
+        shutil.rmtree('generated/images/')
+    except FileNotFoundError:
+        pass
+    shutil.copytree('source/theme/images/', 'generated/images/')
     print('Successfully generated page: ' + title)
     return
 
