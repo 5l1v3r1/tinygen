@@ -176,7 +176,10 @@ def blog(blogCmd, config):
                 status = rebuildIndex(config)
     elif blogCmd == 'rebuild':
         shutil.copyfile('source/theme/theme.css', 'generated/blog/theme.css')
-        shutil.rmtree('generated/images/')
+        try:
+            shutil.rmtree('generated/images/')
+        except FileNotFoundError:
+            pass
         shutil.copytree('source/theme/images/', 'generated/images/')
         print('Rebuilding posts')
         for file in os.listdir('generated/blog/'):
