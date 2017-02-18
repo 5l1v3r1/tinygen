@@ -1,5 +1,5 @@
 # Copyright 2017 Kevin Froman - MIT License - https://ChaosWebs.net/
-import sys, os, configparser, createDelete, subprocess, shutil, sqlite3, time, datetime, tgsocial
+import sys, os, configparser, createDelete, subprocess, shutil, sqlite3, time, datetime, tgsocial, tgrss
 
 markdownSupport = True
 try:
@@ -153,6 +153,8 @@ def blog(blogCmd, config):
                     print(status[1]) # Print the status message of the last operation, generating the post. In this case it should be similar to 'successfully generated post'
                     print('Attempting to rebuild blog index...')
                     status = rebuildIndex(config) # Rebuild the blog index page
+                    print('Rebuilding RSS feed')
+                    tgrss.updateRSS(config)
     elif blogCmd == 'delete':
         try:
             postTitle = sys.argv[3]
@@ -192,6 +194,8 @@ def blog(blogCmd, config):
                         print('Could not rebuild ' + file + '. Reason: Permission error')
                     except Exception as e:
                         print('Could not rebuild ' + file + '. Reason: ' + str(e))
+        print('Rebuilding RSS feed')
+        tgrss.updateRSS(config)
         print('Successfully rebuilt all posts.')
         # Rebuild index includes its own message about rebuilding
         rebuildIndex(config)

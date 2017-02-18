@@ -40,5 +40,10 @@ def genSocial(config, content, postType):
         except KeyError:
             content = content.replace(x, '')
         loopCount = loopCount + 1
+    if postType == 'post':
+        socialImage = '../images/'
+    else:
+        socialImage = './images/'
     loopCount = 0
+    content = content.replace('[{BLOGRSS}]', '<a class="socialLink" href="/blog/feed.rss"><img src="' + socialImage + 'feed.png" alt="RSS feed"></a>')
     return content

@@ -8,6 +8,8 @@ then
   exit 0
 fi
 
+echo "Deleted rss feed"
+rm generated/blog/feed.rss
 rm generated/*.html
 rm generated/*.css
 rm -rf generated/images/
