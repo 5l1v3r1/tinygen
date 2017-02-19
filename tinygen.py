@@ -85,6 +85,9 @@ def generatePage(title, edit):
     for i in navBarPages:
         if i == 'index':
             link = 'home'
+        elif i == 'blog':
+            i = './blog/index'
+            link = 'Blog'
         else:
             link = i
         navBar = navBar + '<li class="navBarItem"><a href="' + i + '.html">' + link.title() + '</a> </li>'
