@@ -1,24 +1,25 @@
 # Copyright 2017 Kevin Froman - MIT License - https://ChaosWebs.net/
 import sys, os, configparser, createDelete, subprocess, shutil, sqlite3, time, datetime, tgsocial, tgrss
 
-markdownSupport = True
+markdownSupport = True # if the user has python markdown, which isn't standard library.
 try:
     import markdown
 except ImportError:
     markdownSupport = False
 
 def getPostDate(title):
+    # Get the post's date from database
     conn = sqlite3.connect('.data/posts.db')
     c = conn.cursor()
     date = 0
     data = (title,)
     for row in c.execute('SELECT DATE FROM Posts where title=?', (data)):
         date = row[0]
-    #status = ('success', 'Added post to database: ' + title)
     conn.close()
     return date
 
 def updatePostList(title, add):
+    # Add or remove a post from the database
     # add is either 'add' or 'remove'
     conn = sqlite3.connect('.data/posts.db')
     c = conn.cursor()
@@ -36,6 +37,7 @@ def updatePostList(title, add):
     return status
 
 def rebuildIndex(config):
+    # Rebuild the blog index.html file
     indexTemplate = 'source/blog-index.html'
     indexProdFile = 'generated/blog/index.html'
     conn = sqlite3.connect('.data/posts.db')

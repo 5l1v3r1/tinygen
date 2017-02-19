@@ -45,5 +45,5 @@ def genSocial(config, content, postType):
     else:
         socialImage = './images/'
     loopCount = 0
-    content = content.replace('[{BLOGRSS}]', '<a class="socialLink" href="/blog/feed.rss"><img src="' + socialImage + 'feed.png" alt="RSS feed"></a>')
+    content = content.replace('[{BLOGRSS}]', '<a class="socialLink" href="feed.rss"><img src="' + socialImage + 'feed.png" alt="RSS feed"></a>')
     return content
