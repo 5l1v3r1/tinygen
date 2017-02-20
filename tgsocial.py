@@ -4,7 +4,7 @@ import configparser
 # Generate social link tags
 def genSocial(config, content, postType):
     loopCount = 0
-    if postType == 'post':
+    if postType == 'post' and config['BLOG']['standalone'] == 'false':
         socialImage = '../images/'
     else:
         socialImage = './images/'
@@ -40,7 +40,7 @@ def genSocial(config, content, postType):
         except KeyError:
             content = content.replace(x, '')
         loopCount = loopCount + 1
-    if postType == 'post':
+    if postType == 'post' and config['BLOG']['standalone'] == 'false':
         socialImage = '../images/'
     else:
         socialImage = './images/'

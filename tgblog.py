@@ -156,6 +156,14 @@ def blog(blogCmd, config):
                     print('Attempting to rebuild blog index...')
                     status = rebuildIndex(config) # Rebuild the blog index page
                     print('Rebuilding RSS feed')
+                    print('Rebuilding images')
+                    if config['BLOG']['standalone'] == 'true':
+                        shutil.rmtree('generated/blog/images/')
+                        shutil.copytree('source/theme/images/', 'generated/blog/images/')
+                    else:
+                        shutil.rmtree('generated/images/')
+                        shutil.copytree('source/theme/images/', 'generated/images/')
+
                     tgrss.updateRSS(config)
     elif blogCmd == 'delete':
         try:
@@ -184,7 +192,10 @@ def blog(blogCmd, config):
             shutil.rmtree('generated/images/')
         except FileNotFoundError:
             pass
-        shutil.copytree('source/theme/images/', 'generated/images/')
+        if config['BLOG']['standalone'] == 'true':
+            shutil.copytree('source/theme/images/', 'generated/blog/images/')
+        else:
+            shutil.copytree('source/theme/images/', 'generated/images/')
         print('Rebuilding posts')
         for file in os.listdir('generated/blog/'):
             if file.endswith('.html'):
