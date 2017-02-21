@@ -49,7 +49,7 @@ Creating a website:
 
     Open & edit ''' + cfgFile + ''' to change site metadata & the pages on the navigation bar.
 
-    Optional: edit source/theme/theme.css to change the global styles.
+    Optional: edit source/theme/''' + themeName + '''/theme.css to change the global styles.
     Optional: edit source/page-template.html to change global markup\n''')
 
     elif helpType == 'blog':
@@ -64,7 +64,7 @@ Creating a website:
 
             Open & edit ''' + cfgFile + ''' to change site metadata & the links on the navigation bar.
 
-            Optional: edit source/theme/theme.css to change the global styles.
+            Optional: edit source/theme/''' + themeName + '''/theme.css to change the global styles.
             Optional: edit source/blog-index.html to change the blog index.
             Optional: edit source/blog-template.html to change global markup\n''')
     return
@@ -120,12 +120,12 @@ def generatePage(title, edit):
         title = 'index'
     with open('generated/' + title + '.html', 'w') as result:
         result.write(page)
-    shutil.copyfile('source/theme/theme.css', 'generated/theme.css')
+    shutil.copyfile('source/theme/' + themeName + '/theme.css', 'generated/theme.css')
     try:
         shutil.rmtree('generated/images/')
     except FileNotFoundError:
         pass
-    shutil.copytree('source/theme/images/', 'generated/images/')
+    shutil.copytree('source/theme/' + themeName + '/images/', 'generated/images/')
     print('Successfully generated page: ' + title)
     return
 
@@ -146,7 +146,7 @@ cfgFile = 'config.cfg'
 
 config = configparser.ConfigParser()
 
-config['SITE'] = {'title': 'My Site', 'author': 'anonymous', 'description': 'Welcome to my site!', 'footer': 'Powered By TinyGen', 'navbar pages': '', 'domain': 'example.com'}
+config['SITE'] = {'title': 'My Site', 'author': 'anonymous', 'description': 'Welcome to my site!', 'footer': 'Powered By TinyGen', 'navbar pages': '', 'domain': 'example.com', 'theme': 'default'}
 config['BLOG'] = {'title': 'My Blog', 'standalone': 'false', 'footer': 'Powered by TinyGen', 'lines-preview': '3', 'blog intro': 'welcome to my blog!', 'description': 'just a random blog', 'twitter': '', 'github': '', 'facebook': '', 'email': '', 'keybase': '', 'google': ''}
 
 deleteTitle = ''
@@ -170,6 +170,9 @@ try:
     config.read(cfgFile)
 except PermissionError:
     fatalError('Unable to load config, no permission.')
+
+# Set the theme name
+themeName = config['SITE']['theme']
 
 # Parse commands
 

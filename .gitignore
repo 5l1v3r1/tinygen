@@ -3,5 +3,7 @@ generated/*.css
 source/pages/*.html
 source/posts/*.html
 generated/blog/feed.rss
+generated/blog/theme/
+generated/theme/
 __pycache__/*
 config.cfg
