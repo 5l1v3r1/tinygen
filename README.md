@@ -19,7 +19,7 @@ Currently only tested on Python 3.4.3 on Linux
 - [ ] Compatibility with Windows & most *nix distros
 - [x] Better output with color support
 - [ ] Plugin support
-- [ ] Theme support
+- [x] Theme support
 - [ ] Built in web server
 - [x] Markdown support
 - [ ] Publish to free site hosting server
