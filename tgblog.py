@@ -51,14 +51,14 @@ def rebuildIndex(config):
 
     c = conn.cursor()
     print('Rebuilding index...')
-    
+
     # Get the posts form the database then build the HTML
 
     for row in c.execute('SELECT * FROM Posts ORDER BY ID DESC'):
         previewFile = open('source/posts/' + row[1] + '.html')
         previewText = previewFile.read()
         print('Adding ' + row[1] + ' to index...')
-        postList = postList + '<a href="' + row[1] + '.html"><h2>' + row[1].title() + '</h2></a>'
+        postList = postList + '<a href="' + row[1] + '.html"><h2>' + row[1].replace('-', ' ').title() + '</h2></a>'
         postList = postList + '<div class="postDate">' + datetime.datetime.fromtimestamp(int(row[2])).strftime('%Y-%m-%d') + '</div>'
         postList = postList + '<div class="postPreview">'
         try:
@@ -116,7 +116,7 @@ def post(title, edit, config):
             content = markdown.markdown(content)
 
     template = open('source/blog-template.html', 'r').read()
-    post = template.replace('[{POSTTITLE}]', title.title())
+    post = template.replace('[{POSTTITLE}]', title.replace('-', ' ').title())
     post = post.replace('[{SITETITLE}]', config['BLOG']['title'])
     post = post.replace('[{AUTHOR}]', config['SITE']['author'])
     post = post.replace('[{POSTCONTENT}]', content)
@@ -145,6 +145,9 @@ def blog(blogCmd, config):
     if blogCmd == 'edit':
         try:
             postTitle = sys.argv[3].replace('<', '&lt;').replace('>', '&gt;')
+            # Strip spaces from posts & replace with dashes, but only if the post does not already exist to preserve backwards compatability
+            if not os.path.exists('source/posts/' + postTitle + '.html'):
+                postTitle = postTitle.replace(' ', '-')
         except IndexError:
             status = ('error', 'syntax: blog edit "post title"')
             indexError = True
