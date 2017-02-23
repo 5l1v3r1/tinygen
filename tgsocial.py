@@ -1,7 +1,7 @@
 # Copyright 2017 Kevin Froman - MIT License - https://ChaosWebs.net/
 import configparser
 
-# Generate social link tags
+# Generate social link tags & HTML
 def genSocial(config, content, postType):
     loopCount = 0
     if postType == 'post' and config['BLOG']['standalone'] == 'false':

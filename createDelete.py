@@ -1,5 +1,9 @@
 import os, configparser, sys
+
+## Module to either create or delete a post or a page or post
+
 def detectKind(kind):
+    # Detects what kind of file we are making
     if kind == 'page':
         kind = 'pages'
     elif kind == 'post':
@@ -24,8 +28,8 @@ def deleteFile(name, kind):
     return
 
 def createFile(name, kind):
-    kind = detectKind(kind)
     # Create a source file if it does not exist
+    kind = detectKind(kind)
     if os.path.exists('source/' + kind + '/' + name + '.html'):
         return
     with open('source/' + kind + '/' + name + '.html', 'w') as place:

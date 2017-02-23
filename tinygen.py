@@ -33,6 +33,7 @@ except ImportError:
 version = '0.2'
 
 def help(helpType):
+    # Show help information
     print(GREEN + '''TinyGen ''' + RESET + version + '''\n
 Copyright 2017 Kevin Froman (MIT/Expat License) ''' + UNDERLINE + '''https://ChaosWebs.net/''' + RESET + '\n')
 

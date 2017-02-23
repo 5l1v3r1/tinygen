@@ -8,7 +8,7 @@ except ImportError:
     markdownSupport = False
 
 def getPostDate(title):
-    # Get the post's date from database
+    # Get the post's date from database and return it (should be epoch format)
     conn = sqlite3.connect('.data/posts.db')
     c = conn.cursor()
     date = 0
@@ -51,6 +51,8 @@ def rebuildIndex(config):
 
     c = conn.cursor()
     print('Rebuilding index...')
+    
+    # Get the posts form the database then build the HTML
 
     for row in c.execute('SELECT * FROM Posts ORDER BY ID DESC'):
         previewFile = open('source/posts/' + row[1] + '.html')
@@ -132,6 +134,7 @@ def post(title, edit, config):
             status = ('success', 'Successfully generated page: ' + title)
     return status
 def blog(blogCmd, config):
+    # Main blog command handler
     postTitle = ''
     status = ('success', '') # Return status. 0 = error or not, 1 = return message
     indexError = False # If command doesn't get an argument, don't try to generate
@@ -188,6 +191,7 @@ def blog(blogCmd, config):
                     status = ('error', 'error occured removing post from database: ' + str(e))
                 status = rebuildIndex(config)
     elif blogCmd == 'rebuild':
+        # Rebuild all blog posts and assets
         shutil.copyfile('source/theme/' + themeName + '/theme.css', 'generated/blog/theme.css')
         try:
             shutil.rmtree('generated/images/')
