@@ -72,7 +72,7 @@ Creating a website:
 
 def events(event):
     for x in plugins:
-        exec(x.replace(' ', '') + '.startup()')
+        exec(x.replace(' ', '') + '.' + event + '()')
         #exec('plName.' + event + '()')
 
 
@@ -162,7 +162,6 @@ helpType = ''
 
 formatType = ''
 
-
 plugins = ''
 plName = ''
 
@@ -189,9 +188,10 @@ themeName = config['SITE']['theme']
 
 plugins = config['SITE']['plugins'].replace(' ', '').split(',')
 for x in plugins:
-    exec(open('plugins/' + x + '/' + x + '.py', 'r').read())
-    #exec(plName + '= ' + x + '()')
-    events('startup')
+    if x != '':
+        exec(open('plugins/' + x + '/' + x + '.py', 'r').read())
+        #exec(plName + '= ' + x + '()')
+        events('startup')
 
 # Parse commands
 
