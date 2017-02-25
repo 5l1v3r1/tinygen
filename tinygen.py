@@ -70,6 +70,12 @@ Creating a website:
             Optional: edit source/blog-template.html to change global markup\n''')
     return
 
+def events(event):
+    for x in plugins:
+        exec(x.replace(' ', '') + '.startup()')
+        #exec('plName.' + event + '()')
+
+
 def fatalError(msg):
     # print a fatal error and exit with an error status code
     print(RED + msg + RESET)
@@ -147,7 +153,7 @@ cfgFile = 'config.cfg'
 
 config = configparser.ConfigParser()
 
-config['SITE'] = {'title': 'My Site', 'author': 'anonymous', 'description': 'Welcome to my site!', 'footer': 'Powered By TinyGen', 'navbar pages': '', 'domain': 'example.com', 'theme': 'default'}
+config['SITE'] = {'title': 'My Site', 'author': 'anonymous', 'description': 'Welcome to my site!', 'footer': 'Powered By TinyGen', 'navbar pages': '', 'domain': 'example.com', 'theme': 'default', 'plugins': ''}
 config['BLOG'] = {'title': 'My Blog', 'standalone': 'false', 'footer': 'Powered by TinyGen', 'lines-preview': '3', 'blog intro': 'welcome to my blog!', 'description': 'just a random blog', 'twitter': '', 'github': '', 'facebook': '', 'email': '', 'keybase': '', 'google': ''}
 
 deleteTitle = ''
@@ -155,6 +161,10 @@ deleteTitle = ''
 helpType = ''
 
 formatType = ''
+
+
+plugins = ''
+plName = ''
 
 # Blog variables, argument (command) and its return status
 blogArg = ''
@@ -174,6 +184,14 @@ except PermissionError:
 
 # Set the theme name
 themeName = config['SITE']['theme']
+
+# Load plugins & run their main method
+
+plugins = config['SITE']['plugins'].replace(' ', '').split(',')
+for x in plugins:
+    exec(open('plugins/' + x + '/' + x + '.py', 'r').read())
+    #exec(plName + '= ' + x + '()')
+    events('startup')
 
 # Parse commands
 
