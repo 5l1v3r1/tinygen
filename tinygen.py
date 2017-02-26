@@ -70,11 +70,16 @@ Creating a website:
             Optional: edit source/blog-template.html to change global markup\n''')
     return
 
-def events(event):
+def events(event, data):
+    # Fire an event to all plugins
+    # retData cannot be defined here, because reasons. Must be in exec.
+    data = data.replace('\\', '\\\\').replace('"', '\\"')
+    #data = str(data)
     for x in plugins:
-        exec(x.replace(' ', '') + '.' + event + '()')
-        #exec('plName.' + event + '()')
-
+        if x != '':
+            exec('ree = ' + x.replace(' ', '') + '.' + event + '("""' + data + '""")')
+        elif x == None:
+            print('is none')
 
 def fatalError(msg):
     # print a fatal error and exit with an error status code
@@ -116,6 +121,8 @@ def generatePage(title, edit):
         title = 'home'
         index = True
     page = template.replace('[{TITLE}]', title.title())
+    page = events('generatePage', page)
+    print('page ' + page)
     page = page.replace('[{SITETITLE}]', config['SITE']['title'])
     page = page.replace('[{AUTHOR}]', config['SITE']['author'])
     page = page.replace('[{CONTENT}]', content)
@@ -191,7 +198,7 @@ for x in plugins:
     if x != '':
         exec(open('plugins/' + x + '/' + x + '.py', 'r').read())
         #exec(plName + '= ' + x + '()')
-        events('startup')
+        events('startup', '')
 
 # Parse commands
 
@@ -208,7 +215,7 @@ if command == 'edit':
     try:
         generatePage(newPageTitle, True)
     except Exception as e:
-        fatalError('Unknown error occured: ' + str(e))
+        fatalError('Unknown error occured (during edit): ' + str(e))
 elif command == 'rebuild':
     rebuild()
 elif command == 'delete':
