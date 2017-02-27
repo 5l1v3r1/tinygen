@@ -7,7 +7,7 @@ if sys.version_info.major == 2:
     sys.stderr.write('Python 2 is not supported. Please use Python 3.\n')
     sys.exit(1)
 
-import configparser, os, shutil, subprocess, tgblog, createDelete, tgsocial
+import configparser, os, shutil, subprocess, tgblog, createDelete, tgsocial, imp
 
 # configparser: needed for site configuration
 # os: cross platform file operations mostly
@@ -31,6 +31,9 @@ except ImportError:
 
 # Version
 version = '0.2'
+
+pluginFolder = 'plugins/'
+MainModule = "__init__"
 
 def help(helpType):
     # Show help information
@@ -70,16 +73,20 @@ Creating a website:
             Optional: edit source/blog-template.html to change global markup\n''')
     return
 
-def events(event, data):
-    # Fire an event to all plugins
-    # retData cannot be defined here, because reasons. Must be in exec.
-    data = data.replace('\\', '\\\\').replace('"', '\\"')
-    #data = str(data)
-    for x in plugins:
-        if x != '':
-            exec('ree = ' + x.replace(' ', '') + '.' + event + '("""' + data + '""")')
-        elif x == None:
-            print('is none')
+def getPlugins():
+    # Loads gets a plugin from the plugin folder
+    # based on: https://lkubuntu.wordpress.com/2012/10/02/writing-a-python-plugin-api/
+    plugins = []
+    possibleplugins = os.listdir(pluginFolder)
+    for i in possibleplugins:
+        location = os.path.join(pluginFolder, i)
+        if not os.path.isdir(location) or not MainModule + ".py" in os.listdir(location):
+            continue
+        info = imp.find_module(MainModule, [location])
+        plugins.append({"name": i, "info": info})
+    return plugins
+def loadPlugin(plugin):
+    return imp.load_module(MainModule, *plugin["info"])
 
 def fatalError(msg):
     # print a fatal error and exit with an error status code
@@ -191,14 +198,11 @@ except PermissionError:
 # Set the theme name
 themeName = config['SITE']['theme']
 
-# Load plugins & run their main method
+# run plugin startup event
 
-plugins = config['SITE']['plugins'].replace(' ', '').split(',')
-for x in plugins:
-    if x != '':
-        exec(open('plugins/' + x + '/' + x + '.py', 'r').read())
-        #exec(plName + '= ' + x + '()')
-        events('startup', '')
+for i in getPlugins():
+    plugin = loadPlugin(i)
+    plugin.startup()
 
 # Parse commands
 
