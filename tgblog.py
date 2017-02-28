@@ -180,6 +180,7 @@ def blog(blogCmd, config):
             status = ('error', 'syntax: blog delete "post title"')
             indexError = True
         if not indexError:
+            tgplugins.events('blogDelete', postTitle, config)
             try:
                 createDelete.deleteFile(postTitle, 'posts')
             except FileNotFoundError:
@@ -196,6 +197,7 @@ def blog(blogCmd, config):
                 status = rebuildIndex(config)
     elif blogCmd == 'rebuild':
         # Rebuild all blog posts and assets
+        tgplugins.events('blogRebuild', '', config)
         shutil.copyfile('source/theme/' + themeName + '/theme.css', 'generated/blog/theme.css')
         try:
             shutil.rmtree('generated/images/')
@@ -222,6 +224,8 @@ def blog(blogCmd, config):
         # Rebuild index includes its own message about rebuilding
         rebuildIndex(config)
         status = ('success', 'Rebuild successful')
+    elif blogCmd == '':
+        status = ('success', '')
     else:
         status = ('error', 'Invalid blog command')
     return status
