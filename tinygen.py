@@ -88,6 +88,16 @@ def getPlugins():
 def loadPlugin(plugin):
     return imp.load_module(MainModule, *plugin["info"])
 
+def events(event, data):
+    retData = ''
+    for i in getPlugins():
+        plugin = loadPlugin(i)
+        if event == 'startup':
+            retData = plugin.startup(data)
+        elif event == 'genPage':
+            retData = plugin.genPage(data)
+    return retData
+
 def fatalError(msg):
     # print a fatal error and exit with an error status code
     print(RED + msg + RESET)
@@ -127,9 +137,8 @@ def generatePage(title, edit):
     if title == 'index':
         title = 'home'
         index = True
-    page = template.replace('[{TITLE}]', title.title())
-    page = events('generatePage', page)
-    print('page ' + page)
+    page = events('genPage', template)
+    page = page.replace('[{TITLE}]', title.title())
     page = page.replace('[{SITETITLE}]', config['SITE']['title'])
     page = page.replace('[{AUTHOR}]', config['SITE']['author'])
     page = page.replace('[{CONTENT}]', content)
@@ -200,9 +209,7 @@ themeName = config['SITE']['theme']
 
 # run plugin startup event
 
-for i in getPlugins():
-    plugin = loadPlugin(i)
-    plugin.startup()
+events('startup', '')
 
 # Parse commands
 
