@@ -7,7 +7,7 @@ if sys.version_info.major == 2:
     sys.stderr.write('Python 2 is not supported. Please use Python 3.\n')
     sys.exit(1)
 
-import configparser, os, shutil, subprocess, tgblog, createDelete, tgsocial, imp
+import configparser, os, shutil, subprocess, tgblog, createDelete, tgsocial, imp, tgplugins
 
 # configparser: needed for site configuration
 # os: cross platform file operations mostly
@@ -28,12 +28,11 @@ try:
 except ImportError:
     print(RED + 'Notice: ' + RESET + ' markdown library not installed. Try installing with pip.\nWill not be able to use markdown.')
     markdownSupport = False
-
 # Version
 version = '0.2'
 
 pluginFolder = 'plugins/'
-MainModule = "__init__"
+MainModule = "__init__" # Main module name for plugins
 
 def help(helpType):
     # Show help information
@@ -72,20 +71,22 @@ Creating a website:
             Optional: edit source/blog-index.html to change the blog index.
             Optional: edit source/blog-template.html to change global markup\n''')
     return
-
+'''
 def getPlugins():
     # Loads gets a plugin from the plugin folder
     # based on: https://lkubuntu.wordpress.com/2012/10/02/writing-a-python-plugin-api/
     plugins = []
-    possibleplugins = os.listdir(pluginFolder)
-    for i in possibleplugins:
+    possiblePlugins = config['SITE']['plugins'].replace(' ', '').split(',')
+    for i in possiblePlugins:
         location = os.path.join(pluginFolder, i)
         if not os.path.isdir(location) or not MainModule + ".py" in os.listdir(location):
             continue
         info = imp.find_module(MainModule, [location])
         plugins.append({"name": i, "info": info})
     return plugins
+
 def loadPlugin(plugin):
+    # Loads a plugin
     return imp.load_module(MainModule, *plugin["info"])
 
 def events(event, data):
@@ -96,7 +97,12 @@ def events(event, data):
             retData = plugin.startup(data)
         elif event == 'genPage':
             retData = plugin.genPage(data)
+        elif event == 'deletePage':
+            retdata = plugin.deletePage(data)
+        else:
+            print('Attempted to call unknown event: ' + event)
     return retData
+'''
 
 def fatalError(msg):
     # print a fatal error and exit with an error status code
@@ -137,7 +143,7 @@ def generatePage(title, edit):
     if title == 'index':
         title = 'home'
         index = True
-    page = events('genPage', template)
+    page = tgplugins.events('genPage', template, config)
     page = page.replace('[{TITLE}]', title.title())
     page = page.replace('[{SITETITLE}]', config['SITE']['title'])
     page = page.replace('[{AUTHOR}]', config['SITE']['author'])
@@ -161,6 +167,7 @@ def generatePage(title, edit):
 
 def rebuild():
     # Rebuild all webpages
+    tgplugins.events('rebuild', '', config)
     for file in os.listdir('source/pages/'):
         if file.endswith('.html'):
             file = file.replace('.html', '')
@@ -209,7 +216,7 @@ themeName = config['SITE']['theme']
 
 # run plugin startup event
 
-events('startup', '')
+tgplugins.events('startup', '', config)
 
 # Parse commands
 
@@ -234,6 +241,7 @@ elif command == 'delete':
         deleteTitle = sys.argv[2]
     except IndexError:
         fatalError('syntax: delete "page title"')
+    tgplugins.events('deletePage', 'delete', config)
     try:
         createDelete.deleteFile(deleteTitle, 'page')
     except FileNotFoundError:
@@ -243,7 +251,6 @@ elif command == 'blog':
         blogArg = sys.argv[2].lower()
     except IndexError:
         help('blog')
-
     blogReturn = tgblog.blog(blogArg, config)
     if blogReturn[0] == 'error':
         fatalError(blogReturn[1])

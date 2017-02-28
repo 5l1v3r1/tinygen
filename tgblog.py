@@ -1,5 +1,5 @@
 # Copyright 2017 Kevin Froman - MIT License - https://ChaosWebs.net/
-import sys, os, configparser, createDelete, subprocess, shutil, sqlite3, time, datetime, tgsocial, tgrss
+import sys, os, configparser, createDelete, subprocess, shutil, sqlite3, time, datetime, tgsocial, tgrss, tgplugins
 
 markdownSupport = True # if the user has python markdown, which isn't standard library.
 try:
@@ -148,6 +148,7 @@ def blog(blogCmd, config):
             # Strip spaces from posts & replace with dashes, but only if the post does not already exist to preserve backwards compatability
             if not os.path.exists('source/posts/' + postTitle + '.html'):
                 postTitle = postTitle.replace(' ', '-')
+            tgplugins.events('blogEdit', postTitle, config)
         except IndexError:
             status = ('error', 'syntax: blog edit "post title"')
             indexError = True
