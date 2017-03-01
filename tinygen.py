@@ -71,38 +71,6 @@ Creating a website:
             Optional: edit source/blog-index.html to change the blog index.
             Optional: edit source/blog-template.html to change global markup\n''')
     return
-'''
-def getPlugins():
-    # Loads gets a plugin from the plugin folder
-    # based on: https://lkubuntu.wordpress.com/2012/10/02/writing-a-python-plugin-api/
-    plugins = []
-    possiblePlugins = config['SITE']['plugins'].replace(' ', '').split(',')
-    for i in possiblePlugins:
-        location = os.path.join(pluginFolder, i)
-        if not os.path.isdir(location) or not MainModule + ".py" in os.listdir(location):
-            continue
-        info = imp.find_module(MainModule, [location])
-        plugins.append({"name": i, "info": info})
-    return plugins
-
-def loadPlugin(plugin):
-    # Loads a plugin
-    return imp.load_module(MainModule, *plugin["info"])
-
-def events(event, data):
-    retData = ''
-    for i in getPlugins():
-        plugin = loadPlugin(i)
-        if event == 'startup':
-            retData = plugin.startup(data)
-        elif event == 'genPage':
-            retData = plugin.genPage(data)
-        elif event == 'deletePage':
-            retdata = plugin.deletePage(data)
-        else:
-            print('Attempted to call unknown event: ' + event)
-    return retData
-'''
 
 def fatalError(msg):
     # print a fatal error and exit with an error status code
