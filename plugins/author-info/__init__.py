@@ -1,5 +1,6 @@
 # Copyright 2017 Kevin Froman - MIT License - https://ChaosWebs.net/
 # Plugin to add author information to blog posts
+import configparser, os
 def startup(data):
 	print('Running author info plugin')
 	return
@@ -15,6 +16,9 @@ def deletePage(data):
 	return
 
 def blogEdit(data):
-    print('blog edit event')
-    data = data.replace('[{PLUGINCONTENT}]', '[{PLUGINCONTENT}]<span style="color: red;">made by kevin froman</span>')
-    return data
+	cfgFile = 'plugins/author-info/config.cfg'
+	config = configparser.ConfigParser()
+	config['Author Info'] = {'name': 'anonymous', 'link': '', 'picture url': ''}
+	print('Adding author information to post...')
+	data = data.replace('[{PLUGINCONTENT}]', '<span style="color: red;">made by kevin froman</span>')
+	return data

@@ -116,8 +116,8 @@ def post(title, edit, config):
             content = markdown.markdown(content)
 
     template = open('source/blog-template.html', 'r').read()
-    post = tgplugins.events('blogEdit', template, config)
-    post = template.replace('[{POSTTITLE}]', title.replace('-', ' ').title())
+    post = '[{PLUGINCONTENT}]' + tgplugins.events('blogEdit', template, config)
+    post = post.replace('[{POSTTITLE}]', title.replace('-', ' ').title())
     post = post.replace('[{SITETITLE}]', config['BLOG']['title'])
     post = post.replace('[{AUTHOR}]', config['SITE']['author'])
     post = post.replace('[{POSTCONTENT}]', content)
@@ -125,6 +125,7 @@ def post(title, edit, config):
     post = post.replace('[{NAVBAR}]', '')
     post = post.replace('[{SITEDESC}]', config['BLOG']['description'])
     post = post.replace('[{POSTDATE}]', date)
+    post = post.replace('[{PLUGINCONTENT}]', '')
     post = tgsocial.genSocial(config, post, 'post')
     with open('generated/blog/' + title + '.html', 'w') as result:
         result.write(post)
