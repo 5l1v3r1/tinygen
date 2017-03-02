@@ -35,7 +35,7 @@ pluginFolder = 'plugins/'
 MainModule = "__init__" # Main module name for plugins
 
 def help(helpType):
-    # Show help information
+    # Show help information, site generation unless blog help is specified
     print(GREEN + '''TinyGen ''' + RESET + version + '''\n
 Copyright 2017 Kevin Froman (MIT/Expat License) ''' + UNDERLINE + '''https://ChaosWebs.net/''' + RESET + '\n')
 

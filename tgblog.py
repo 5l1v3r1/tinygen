@@ -116,6 +116,7 @@ def post(title, edit, config):
             content = markdown.markdown(content)
 
     template = open('source/blog-template.html', 'r').read()
+    post = tgplugins.events('blogEdit', template, config)
     post = template.replace('[{POSTTITLE}]', title.replace('-', ' ').title())
     post = post.replace('[{SITETITLE}]', config['BLOG']['title'])
     post = post.replace('[{AUTHOR}]', config['SITE']['author'])
@@ -148,7 +149,6 @@ def blog(blogCmd, config):
             # Strip spaces from posts & replace with dashes, but only if the post does not already exist to preserve backwards compatability
             if not os.path.exists('source/posts/' + postTitle + '.html'):
                 postTitle = postTitle.replace(' ', '-')
-            tgplugins.events('blogEdit', postTitle, config)
         except IndexError:
             status = ('error', 'syntax: blog edit "post title"')
             indexError = True
