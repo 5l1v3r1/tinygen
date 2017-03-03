@@ -35,8 +35,6 @@ def blogEdit(data):
 	else:
 		authorLink = config['Author-Info']['name']
 	if pic != '':
-		if not pic.startswith('http://') and not pic.startswith('https://'):
-			pic = 'http://' + pic
 		pic = '<img src="' + pic + '" alt="author photo" style="max-width: 25%;">'
 	else:
 		pic = ''
