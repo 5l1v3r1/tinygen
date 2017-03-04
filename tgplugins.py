@@ -38,6 +38,8 @@ def events(event, data, config):
                 retData = retData + plugin.rebuild(data)
             elif event == 'blogEdit':
                 retData = retData + plugin.blogEdit(data)
+            elif event == 'blogRebuild':
+                retData = retData + plugin.blogEdit(data)
             else:
                 print('Attempted to call unknown event: ' + event)
         except TypeError:

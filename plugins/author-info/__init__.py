@@ -42,3 +42,9 @@ def blogEdit(data):
 	print('Adding author information to post...')
 	data = data.replace('[{PLUGINCONTENT}]', '<div class="center" style="margin-bottom: -25%; margin-top: 2em; border-radius: 5px; padding: 5px;"><span>Proudly made by ' + authorLink + '</span><br><br>' + pic + '</div>')
 	return data
+
+def blogDelete(data):
+	return
+
+def blogRebuild(data):
+	return

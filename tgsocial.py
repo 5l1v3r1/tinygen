@@ -4,14 +4,15 @@ import configparser
 # Generate social link tags & HTML
 def genSocial(config, content, postType):
     loopCount = 0
-    if postType == 'post' and config['BLOG']['standalone'] == 'false':
-        socialImage = '../images/'
-    else:
-        socialImage = './images/'
+
 
     socialLinks = [config['BLOG']['twitter'], config['BLOG']['facebook'], config['BLOG']['github'], config['BLOG']['email'], config['BLOG']['keybase'], config['BLOG']['google']]
     socialLinkTags = ['[{TWITTER}]', '[{FACEBOOK}]', '[{GITHUB}]', '[{EMAIL}]', '[{KEYBASE}]', '[{GOOGLE}]']
     for x in socialLinkTags:
+        if postType == 'post' and config['BLOG']['standalone'] == 'false':
+            socialImage = '../images/'
+        else:
+            socialImage = './images/'
         try:
             if socialLinks[loopCount] != '':
                 if 'FACEBOOK' in x:
