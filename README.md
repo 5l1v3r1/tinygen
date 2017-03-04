@@ -18,7 +18,7 @@ Currently only tested on Python 3.4.3 on Linux
 - [x] Static blog support
 - [ ] Compatibility with Windows & most *nix distros
 - [x] Better output with color support
-- [ ] Plugin support
+- [x] Plugin support
 - [x] Theme support
 - [ ] Built in web server
 - [x] Markdown support
