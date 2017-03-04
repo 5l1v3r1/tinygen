@@ -13,7 +13,7 @@ Currently only tested on Python 3.4.3 on Linux
 * ✅ Not complicated if you have cli experience
 * ✅ Straight forward light weight default template
 
-## Development Map (to do):
+## To do list:
 
 - [x] Static blog support
 - [ ] Compatibility with Windows & most *nix distros
