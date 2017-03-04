@@ -26,22 +26,22 @@ def events(event, data, config):
     #ranPlugins = [''] Doesn't seem like we need to actually do this
     for i in getPlugins(config):
         plugin = loadPlugin(i)
-        if plugin not in ranPlugins:
-            try:
-                if event == 'startup':
-                    retData = retData + plugin.startup(data)
-                elif event == 'genPage':
-                    retData = retData + plugin.genPage(data)
-                elif event == 'deletePage':
-                    retData = retData + plugin.deletePage(data)
-                elif event == 'rebuild':
-                    retData = retData + plugin.rebuild(data)
-                elif event == 'blogEdit':
-                    retData = retData + plugin.blogEdit(data)
-                else:
-                    print('Attempted to call unknown event: ' + event)
-            except TypeError:
-                pass
+        #if plugin not in ranPlugins:
+        try:
+            if event == 'startup':
+                retData = retData + plugin.startup(data)
+            elif event == 'genPage':
+                retData = retData + plugin.genPage(data)
+            elif event == 'deletePage':
+                retData = retData + plugin.deletePage(data)
+            elif event == 'rebuild':
+                retData = retData + plugin.rebuild(data)
+            elif event == 'blogEdit':
+                retData = retData + plugin.blogEdit(data)
+            else:
+                print('Attempted to call unknown event: ' + event)
+        except TypeError:
+            pass
             #ranPlugins.append(plugin)
     if retData == '':
         retData = data
