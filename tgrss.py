@@ -12,7 +12,7 @@ def updateRSS(config):
     <description>''' + config['BLOG']['description'] + '''</description>'''
     for row in c.execute('SELECT * FROM Posts ORDER BY ID DESC'):
         rss = rss + '''<item>
-            <title>''' + row[1].replace('<', '&lt;').replace('>', '&gt;') + '''</title>
+            <title>''' + row[1].replace('<', '&lt;').replace('>', '&gt;').replace('-', ' ') + '''</title>
             <link>http://''' + config['SITE']['domain'] + '''blog/''' + row[1] + '''.html</link>
             <description>''' + open('source/posts/' + row[1] + '.html', 'r').read().splitlines()[0].replace('<', '&lt;').replace('>', '&gt;') + '''</description></item>'''
     rss = rss + '</channel></rss>'
