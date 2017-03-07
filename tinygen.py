@@ -7,7 +7,7 @@ if sys.version_info.major == 2:
     sys.stderr.write('Python 2 is not supported. Please use Python 3.\n')
     sys.exit(1)
 
-import configparser, os, shutil, subprocess, tgblog, createDelete, tgsocial, imp, tgplugins
+import configparser, os, shutil, subprocess, tgblog, createDelete, tgsocial, imp, tgplugins, tgls
 
 # configparser: needed for site configuration
 # os: cross platform file operations mostly
@@ -224,6 +224,9 @@ elif command == 'blog':
         fatalError(blogReturn[1])
     else:
         print(blogReturn[1])
+elif command == 'list':
+    print('Listing pages...')
+    tgls.listFiles('pages')
 elif command == 'help':
     try:
         helpType = sys.argv[2]

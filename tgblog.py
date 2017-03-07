@@ -1,5 +1,5 @@
 # Copyright 2017 Kevin Froman - MIT License - https://ChaosWebs.net/
-import sys, os, configparser, createDelete, subprocess, shutil, sqlite3, time, datetime, tgsocial, tgrss, tgplugins
+import sys, os, configparser, createDelete, subprocess, shutil, sqlite3, time, datetime, tgsocial, tgrss, tgplugins, tgls
 
 markdownSupport = True # if the user has python markdown, which isn't standard library.
 try:
@@ -202,6 +202,9 @@ def blog(blogCmd, config):
                 except Exception as e:
                     status = ('error', 'error occured removing post from database: ' + str(e))
                 status = rebuildIndex(config)
+    elif blogCmd == 'list':
+        print('Listing posts...')
+        tgls.listFiles('posts')
     elif blogCmd == 'rebuild':
         # Rebuild all blog posts and assets
         tgplugins.events('blogRebuild', '', config)
