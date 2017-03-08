@@ -43,7 +43,8 @@ Copyright 2017 Kevin Froman (MIT/Expat License) ''' + UNDERLINE + '''https://Cha
         print(GREEN + sys.argv[0] + RESET + ''' edit [page title] - create/edit a page
 ''' + GREEN + sys.argv[0] + RESET + ''' help - show this help message
 ''' + GREEN + sys.argv[0] + RESET + ''' rebuild - rebuild all pages
-''' + GREEN + sys.argv[0] + RESET + ''' delete [page title] - delete a page ''' +
+''' + GREEN + sys.argv[0] + RESET + ''' delete [page title] - delete a page
+''' + GREEN + sys.argv[0] + RESET + ''' list - list pages ''' +
 '''
 
 Creating a website:
@@ -58,8 +59,8 @@ Creating a website:
     elif helpType == 'blog':
                 print(GREEN + sys.argv[0] + RESET + ''' blog edit [post title] - create/edit a page
         ''' + GREEN + sys.argv[0] + RESET + ''' blog rebuild - rebuild all posts
-        ''' + GREEN + sys.argv[0] + RESET + ''' blog delete [posts title] - delete a post ''' +
-        '''
+        ''' + GREEN + sys.argv[0] + RESET + ''' blog delete [posts title] - delete a post
+        ''' + GREEN + sys.argv[0] + RESET + ''' blog list - list all posts
 
         Creating a blog:
 
