@@ -29,5 +29,6 @@ def blogRebuild(data):
 	return
 
 class Commands:
-	def helloworld(args):
-		print('Hello World ' + args)
+	def commands(*args):
+		for i in args:
+			print('Hello World ' + i)

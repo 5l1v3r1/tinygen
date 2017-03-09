@@ -235,4 +235,8 @@ elif command == 'help':
     except IndexError:
         help('normal')
 else:
-    help('normal')
+    for i in tgplugins.getPlugins(config):
+        if command == i['name']:
+            plugin = tgplugins.loadPlugin(i)
+            plugin.Commands.commands(*sys.argv)
+    #fatalError('Unknown command: ' + command + '. Run ' + sys.argv[0] + ' help for more information.')
