@@ -20,6 +20,9 @@
   padding: 1em;
   padding-bottom: 10%;
 }
+#postListArea img{
+  max-width: 100%;
+}
 
 .postPreview{
   text-align: left;
