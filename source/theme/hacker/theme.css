@@ -222,5 +222,5 @@ html {
 }
 
 div.postPreview a {
-    color: #00ff77;
+    color: #00ff77 !important;
 }
