@@ -30,5 +30,8 @@ def blogRebuild(data):
 
 class Commands:
 	def commands(*args):
+		argCount = 0
 		for i in args:
-			print('Hello World ' + i)
+			if argCount > 1:
+				print('Hello World ' + i)
+			argCount = argCount + 1
