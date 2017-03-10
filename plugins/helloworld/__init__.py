@@ -19,7 +19,7 @@ def deletePage(data):
 def blogEdit(data):
 	print('blog edit event')
 	return
-	
+
 def blogDelete(data):
 	print('blog delete event')
 	return
@@ -27,3 +27,11 @@ def blogDelete(data):
 def blogRebuild(data):
 	print('blog rebuild event')
 	return
+
+class Commands:
+	def commands(*args):
+		argCount = 0
+		for i in args:
+			if argCount > 1:
+				print('Hello World ' + i)
+			argCount = argCount + 1
