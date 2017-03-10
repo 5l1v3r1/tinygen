@@ -221,4 +221,6 @@ html {
     font-family: monospace;
 }
 
-
+div.postPreview a {
+    color: #00ff77 !important;
+}
