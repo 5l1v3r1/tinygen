@@ -1,6 +1,6 @@
 # Copyright 2017 Kevin Froman - MIT License - https://ChaosWebs.net/
 
-import os, imp
+import os, imp, sys
 pluginFolder = 'plugins/'
 MainModule = "__init__"
 
@@ -22,6 +22,7 @@ def getPlugins(config):
     return plugins
 
 def events(event, data, config):
+    command = sys.argv[1]
     retData = ''
     #ranPlugins = [''] Doesn't seem like we need to actually do this
     for i in getPlugins(config):
@@ -40,6 +41,12 @@ def events(event, data, config):
                 retData = retData + plugin.blogEdit(data)
             elif event == 'blogRebuild':
                 retData = retData + plugin.blogEdit(data)
+            elif event == 'commands':
+                if command == i['name']:
+                    plugin.Commands.commands(*sys.argv)
+                    retData = True
+                else:
+                    break
             else:
                 print('Attempted to call unknown event: ' + event)
         except TypeError:
