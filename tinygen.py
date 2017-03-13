@@ -130,7 +130,6 @@ def generatePage(title, edit):
         shutil.rmtree('generated/images/')
     except FileNotFoundError:
         pass
-    shutil.copytree('source/theme/' + themeName + '/images/', 'generated/images/')
     print('Successfully generated page: ' + title)
     return
 
@@ -141,6 +140,9 @@ def rebuild():
         if file.endswith('.html'):
             file = file.replace('.html', '')
             generatePage(file, False)
+    print('Copying images...')
+    shutil.copytree('source/pages/images/', 'generated/images/')
+    createDelete.copytree('source/theme/' + themeName + '/images/', 'generated/images/')
     return
 
 command = ''
@@ -203,6 +205,12 @@ if command == 'edit':
         generatePage(newPageTitle, True)
     except Exception as e:
         fatalError('Unknown error occured (during edit): ' + str(e))
+    try:
+        print('Copying images...')
+        shutil.copytree('source/pages/images/', 'generated/images/')
+        createDelete.copytree('source/theme/' + themeName + '/images/', 'generated/images/')
+    except Exception as e:
+        fatalError('Unknown error while copying images: ' + str(e))
 elif command == 'rebuild':
     rebuild()
 elif command == 'delete':

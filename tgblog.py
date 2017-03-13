@@ -135,6 +135,17 @@ def post(title, edit, config):
             print(status[1])
             status = ('success', 'Successfully generated page: ' + title)
     return status
+
+def rebuildImages(config, themeName):
+    # Rebuild blog images
+    print('Rebuilding images')
+    if config['BLOG']['standalone'] == 'true':
+        shutil.copytree('source/theme/' + themeName + '/images/', 'generated/blog/images/')
+    else:
+        createDelete.copytree('source/theme/' + themeName + '/images/', 'generated/images/')
+    createDelete.copytree('source/posts/images/', 'generated/blog/images/')
+    return
+
 def blog(blogCmd, config):
     # Main blog command handler
     postTitle = ''
@@ -166,19 +177,7 @@ def blog(blogCmd, config):
                     status = rebuildIndex(config) # Rebuild the blog index page
                     print('Rebuilding RSS feed')
                     print('Rebuilding images')
-                    try:
-                        shutil.rmtree('generated/blog/images/')
-                    except FileNotFoundError:
-                        pass
-                    try:
-                        shutil.rmtree('generated/images/')
-                    except FileNotFoundError:
-                        pass
-                    if config['BLOG']['standalone'] == 'true':
-                        shutil.copytree('source/theme/' + themeName + '/images/', 'generated/blog/images/')
-                    else:
-                        shutil.copytree('source/theme/' + themeName + '/images/', 'generated/images/')
-
+                    rebuildImages(config, themeName)
                     tgrss.updateRSS(config)
     elif blogCmd == 'delete':
         try:
@@ -209,18 +208,8 @@ def blog(blogCmd, config):
         # Rebuild all blog posts and assets
         tgplugins.events('blogRebuild', '', config)
         shutil.copyfile('source/theme/' + themeName + '/theme.css', 'generated/blog/theme.css')
-        try:
-            shutil.rmtree('generated/images/')
-        except FileNotFoundError:
-            pass
-        try:
-            shutil.rmtree('generated/blog/images/')
-        except FileNotFoundError:
-            pass
-        if config['BLOG']['standalone'] == 'true':
-            shutil.copytree('source/theme/' + themeName + '/images/', 'generated/blog/images/')
-        else:
-            shutil.copytree('source/theme/' + themeName + '/images/', 'generated/images/')
+        print('Rebuilding images')
+        rebuildImages(config, themeName)
         print('Rebuilding posts')
         for file in os.listdir('generated/blog/'):
             if file.endswith('.html'):
