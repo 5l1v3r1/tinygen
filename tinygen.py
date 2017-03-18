@@ -156,6 +156,7 @@ config = configparser.ConfigParser()
 
 config['SITE'] = {'title': 'My Site', 'author': 'anonymous', 'description': 'Welcome to my site!', 'footer': 'Powered By TinyGen', 'navbar pages': '', 'domain': 'example.com', 'theme': 'default', 'plugins': ''}
 config['BLOG'] = {'title': 'My Blog', 'standalone': 'false', 'rss': 'true', 'footer': 'Powered by TinyGen', 'lines-preview': '3', 'blog intro': 'welcome to my blog!', 'description': 'just a random blog', 'twitter': '', 'github': '', 'facebook': '', 'email': '', 'keybase': '', 'google': ''}
+config['ETC'] = {'color-output': 'true'}
 
 deleteTitle = ''
 
@@ -181,6 +182,15 @@ try:
     config.read(cfgFile)
 except PermissionError:
     fatalError('Unable to load config, no permission.')
+
+# Turn off colors if it is false in config
+
+if config['ETC']['color-output'] == 'false':
+    GREEN = ''
+    RESET = ''
+    UNDERLINE = ''
+    RED = ''
+
 
 # Set the theme name
 themeName = config['SITE']['theme']
