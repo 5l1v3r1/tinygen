@@ -140,7 +140,7 @@ def rebuildImages(config, themeName):
     # Rebuild blog images
     print('Rebuilding images')
     if config['BLOG']['standalone'] == 'true':
-        shutil.copytree('source/theme/' + themeName + '/images/', 'generated/blog/images/')
+        createDelete.copytree('source/theme/' + themeName + '/images/', 'generated/blog/images/')
     else:
         createDelete.copytree('source/theme/' + themeName + '/images/', 'generated/images/')
     createDelete.copytree('source/posts/images/', 'generated/blog/images/')
