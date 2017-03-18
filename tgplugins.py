@@ -22,7 +22,10 @@ def getPlugins(config):
     return plugins
 
 def events(event, data, config):
-    command = sys.argv[1]
+    try:
+        command = sys.argv[1]
+    except IndexError:
+        return
     retData = ''
     #ranPlugins = [''] Doesn't seem like we need to actually do this
     for i in getPlugins(config):

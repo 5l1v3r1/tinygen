@@ -58,19 +58,19 @@ Creating a website:
 
     elif helpType == 'blog':
                 print(GREEN + sys.argv[0] + RESET + ''' blog edit [post title] - create/edit a page
-        ''' + GREEN + sys.argv[0] + RESET + ''' blog rebuild - rebuild all posts
-        ''' + GREEN + sys.argv[0] + RESET + ''' blog delete [posts title] - delete a post
-        ''' + GREEN + sys.argv[0] + RESET + ''' blog list - list all posts
+''' + GREEN + sys.argv[0] + RESET + ''' blog rebuild - rebuild all posts
+''' + GREEN + sys.argv[0] + RESET + ''' blog delete [posts title] - delete a post
+''' + GREEN + sys.argv[0] + RESET + ''' blog list - list all posts
 
-        Creating a blog:
+Creating a blog:
 
-            Do ''' + GREEN + sys.argv[0] + RESET + ''' edit [post title] to start creating or editing a post
+    Do ''' + GREEN + sys.argv[0] + RESET + ''' edit [post title] to start creating or editing a post
 
-            Open & edit ''' + cfgFile + ''' to change site metadata & the links on the navigation bar.
+    Open & edit ''' + cfgFile + ''' to change site metadata & the links on the navigation bar.
 
-            Optional: edit source/theme/''' + themeName + '''/theme.css to change the global styles.
-            Optional: edit source/blog-index.html to change the blog index.
-            Optional: edit source/blog-template.html to change global markup\n''')
+    Optional: edit source/theme/''' + themeName + '''/theme.css to change the global styles.
+    Optional: edit source/blog-index.html to change the blog index.
+    Optional: edit source/blog-template.html to change global markup\n''')
     return
 
 def fatalError(msg):
