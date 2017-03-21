@@ -186,6 +186,7 @@ def blog(blogCmd, config):
             status = ('error', 'syntax: blog delete "post title"')
             indexError = True
         if not indexError:
+            postTitle = postTitle.replace(' ', '-')
             tgplugins.events('blogDelete', postTitle, config)
             try:
                 createDelete.deleteFile(postTitle, 'posts')

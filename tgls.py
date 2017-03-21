@@ -8,5 +8,5 @@ def listFiles(showType):
     elif showType == 'pages':
         files = glob.glob('source/pages/*.html')
     for i in files:
-        print(i.replace('source/pages/', '').replace('source/posts/', '').replace('.html', ''))
+        print(i.replace('source/pages/', '').replace('source/posts/', '').replace('.html', '').replace('-', ' '))
     return

@@ -208,7 +208,7 @@ except IndexError:
 
 if command == 'edit':
     try:
-        newPageTitle = sys.argv[2]
+        newPageTitle = sys.argv[2].replace(' ', '-')
     except IndexError:
         fatalError('syntax: edit "page title"')
     try:
@@ -226,6 +226,7 @@ elif command == 'rebuild':
 elif command == 'delete':
     try:
         deleteTitle = sys.argv[2]
+        deleteTitle = deleteTitle.replace(' ', '-')
     except IndexError:
         fatalError('syntax: delete "page title"')
     tgplugins.events('deletePage', 'delete', config)
