@@ -224,3 +224,52 @@ html {
 div.postPreview a {
     color: #00ff77 !important;
 }
+
+html {
+    background-color: #000000 !important;
+    color: #22ff00 !important;
+    font-family: monospace !important;
+}
+
+#siteTitle a {
+    color: #22ff00 !important;
+    font-family: monospace !important;
+}
+
+#mainContent h2 {
+    color: #22ff00 !important;
+}
+
+#footer footer {
+    color: #22ff00 !important;
+}
+
+a {
+    color: #0c5700 !important;
+    text-decoration: none !important;
+    font-family: monospace !important;
+}
+
+#mainContent {
+    border-color: #22ff00 !important;
+    border-style: double !important;
+    border-width: 3px !important;
+}
+
+div.postPreview a {
+    font-family: monospace !important;
+}
+
+img {
+    border-radius: 15px !important;
+}
+
+#siteTitle {
+    font-family: monospace !important;
+}
+
+#postListArea {
+    border-color: #22ff00 !important;
+    border-style: double !important;
+    border-width: 3px !important;
+}
