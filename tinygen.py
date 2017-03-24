@@ -113,7 +113,10 @@ def generatePage(title, edit):
         title = 'home'
         index = True
     page = tgplugins.events('genPage', template, config)
-    page = page.replace('[{TITLE}]', title.title())
+    if config['SITE']['embed-titles'] == 'true':
+        page = page.replace('[{TITLE}]', title.title())
+    else:
+        page = page.replace('[{TITLE}]', '')
     page = page.replace('[{SITETITLE}]', config['SITE']['title'])
     page = page.replace('[{AUTHOR}]', config['SITE']['author'])
     page = page.replace('[{CONTENT}]', content)
@@ -154,7 +157,7 @@ cfgFile = 'config.cfg'
 
 config = configparser.ConfigParser()
 
-config['SITE'] = {'title': 'My Site', 'author': 'anonymous', 'description': 'Welcome to my site!', 'footer': 'Powered By TinyGen', 'navbar pages': '', 'domain': 'example.com', 'theme': 'default', 'plugins': ''}
+config['SITE'] = {'title': 'My Site', 'author': 'anonymous', 'description': 'Welcome to my site!', 'footer': 'Powered By TinyGen', 'navbar pages': '', 'domain': 'example.com', 'theme': 'default', 'plugins': '', 'embed-titles': 'true'}
 config['BLOG'] = {'title': 'My Blog', 'standalone': 'false', 'rss': 'true', 'footer': 'Powered by TinyGen', 'lines-preview': '3', 'blog intro': 'welcome to my blog!', 'description': 'just a random blog', 'twitter': '', 'github': '', 'facebook': '', 'email': '', 'keybase': '', 'google': ''}
 config['ETC'] = {'color-output': 'true'}
 
