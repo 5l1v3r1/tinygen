@@ -113,10 +113,11 @@ def generatePage(title, edit):
         title = 'home'
         index = True
     page = tgplugins.events('genPage', template, config)
-    if config['SITE']['embed-titles'] == 'true':
-        page = page.replace('[{TITLE}]', title.title())
-    else:
+    if config['SITE']['embed-titles'] == 'false':
+        page = page.replace('[{TITLE}]', title.title(), 1)
         page = page.replace('[{TITLE}]', '')
+    else:
+        page = page.replace('[{TITLE}]', title.title())
     page = page.replace('[{SITETITLE}]', config['SITE']['title'])
     page = page.replace('[{AUTHOR}]', config['SITE']['author'])
     page = page.replace('[{CONTENT}]', content)
