@@ -83,7 +83,17 @@ def rebuildIndex(config):
     content = content.replace('[{POSTLIST}]', postList)
     content = tgsocial.genSocial(config, content, 'post')
 
-    createDelete.copytree('source/posts/res/', 'generated/blog/res/')
+    try:
+        shutil.rmtree('generated/blog/res/')
+        os.mkdir('generated/blog/res/')
+    except FileNotFoundError:
+        pass
+    try:
+        createDelete.copytree('source/pages/res/', 'generated/blog/res/')
+    except FileNotFoundError:
+        pass
+    except FileExistsError:
+        pass
 
     f = open(indexProdFile, 'w').write(content)
 

@@ -135,6 +135,11 @@ def generatePage(title, edit):
     except FileNotFoundError:
         pass
     try:
+        shutil.rmtree('generated/res/')
+        os.mkdir('generated/res/')
+    except FileNotFoundError:
+        pass
+    try:
         createDelete.copytree('source/pages/res/', 'generated/res/')
     except FileNotFoundError:
         pass
