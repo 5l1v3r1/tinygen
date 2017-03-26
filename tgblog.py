@@ -37,7 +37,8 @@ def updatePostList(title, add):
     return status
 
 def rebuildIndex(config):
-    # Rebuild the blog index.html file
+    # Rebuild the blog index.html file and move res folder
+
     indexTemplate = 'source/blog-index.html'
     indexProdFile = 'generated/blog/index.html'
     conn = sqlite3.connect('.data/posts.db')
@@ -81,6 +82,8 @@ def rebuildIndex(config):
     content = content.replace('[{SITEFOOTER}]', config['BLOG']['footer'])
     content = content.replace('[{POSTLIST}]', postList)
     content = tgsocial.genSocial(config, content, 'post')
+
+    createDelete.copytree('source/posts/res/', 'generated/blog/res/')
 
     f = open(indexProdFile, 'w').write(content)
 
