@@ -131,3 +131,7 @@ html, body { height: 100%; }
 #socialLinks{
   padding-top: 10px;
 }
+
+#myIntro{
+  font-style: italic;
+}

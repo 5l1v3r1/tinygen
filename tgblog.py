@@ -80,6 +80,7 @@ def rebuildIndex(config):
     content = content.replace('[{AUTHOR}]', config['SITE']['AUTHOR'])
     content = content.replace('[{NAVBAR}]', '')
     content = content.replace('[{SITEFOOTER}]', config['BLOG']['footer'])
+    content = content.replace('[{BLOGINTRO}]', config['BLOG']['blog-intro'])
     content = content.replace('[{POSTLIST}]', postList)
     content = tgsocial.genSocial(config, content, 'post')
 
@@ -136,6 +137,7 @@ def post(title, edit, config):
     post = post.replace('[{POSTCONTENT}]', content)
     post = post.replace('[{SITEFOOTER}]', config['BLOG']['footer'])
     post = post.replace('[{NAVBAR}]', '')
+    post = post.replace('[{BLOGINTRO}]', config['BLOG']['blog-intro'])
     post = post.replace('[{SITEDESC}]', config['BLOG']['description'])
     post = post.replace('[{POSTDATE}]', date)
     post = post.replace('[{PLUGINCONTENT}]', '')

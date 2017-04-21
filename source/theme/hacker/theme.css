@@ -273,3 +273,7 @@ img {
     border-style: double !important;
     border-width: 3px !important;
 }
+
+#myIntro{
+  font-style: italic;
+}
