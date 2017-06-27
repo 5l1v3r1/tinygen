@@ -120,11 +120,12 @@ def post(title, edit, config):
         date = datetime.datetime.fromtimestamp(int(time.time())).strftime('%Y-%m-%d')
     if edit:
         # If recieved arg to edit the file
-        try:
+        if os.getenv('EDITOR') is None:
+            print('EDITOR environment variable not set. Edit source/posts/' + title + '.html, then press enter to continue.')
+            input()
+        else:
             editP = subprocess.Popen((os.getenv('EDITOR'), 'source/posts/' + title + '.html'))
             editP.wait()
-        except TypeError:
-            status = ('error', 'Unable to edit: ' + title + '. reason: editor environment variable is not set.')
     content = open('source/posts/' + title + '.html', 'r').read()
     if markdownSupport:
             content = markdown.markdown(content)

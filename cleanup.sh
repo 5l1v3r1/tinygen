@@ -1,6 +1,6 @@
 #!/bin/bash
 # Bash script to reset tinygen to defaults when testing
-whiptail --yesno "This will reset your Tinygen instance to defaults, deleting all pages, posts, & config!" 20 50
+whiptail --yesno "This will reset your Tinygen instance to defaults, deleting all pages, posts, & config! This script mainly meant for development purposes!" 20 50
 
 if [[ $? != 0 ]]
 then
