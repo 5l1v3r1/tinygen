@@ -7,6 +7,8 @@ def listFiles(showType):
         files = glob.glob('source/posts/*.html')
     elif showType == 'pages':
         files = glob.glob('source/pages/*.html')
+    elif showType == 'drafts':
+        files = glob.glob('source/posts/drafts/*.html')
     for i in files:
-        print(i.replace('source/pages/', '').replace('source/posts/', '').replace('.html', '').replace('-', ' '))
+        print(i.replace('source/pages/', '').replace('source/posts/', '').replace('drafts/', '').replace('.html', '').replace('-', ' '))
     return

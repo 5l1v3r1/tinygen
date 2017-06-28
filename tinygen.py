@@ -29,7 +29,7 @@ except ImportError:
     print(RED + 'Notice: ' + RESET + ' markdown library not installed. Try installing with pip.\nWill not be able to use markdown.')
     markdownSupport = False
 # Version
-version = '0.3'
+version = '0.4'
 
 pluginFolder = 'plugins/'
 MainModule = "__init__" # Main module name for plugins
@@ -64,7 +64,11 @@ Creating a website:
 
 Creating a blog:
 
-    Do ''' + GREEN + sys.argv[0] + RESET + ''' edit [post title] to start creating or editing a post
+    Do ''' + GREEN + sys.argv[0] + RESET + ''' edit [post title] - start creating or editing a post
+       ''' + GREEN + sys.argv[0] + RESET + ''' draft edit [draft title] - edit a draft
+       ''' + GREEN + sys.argv[0] + RESET + ''' draft list - list drafts
+       ''' + GREEN + sys.argv[0] + RESET + ''' draft delete [draft title] - delete a draft
+       ''' + GREEN + sys.argv[0] + RESET + ''' draft publish [draft title] - publish a draft
 
     Open & edit ''' + cfgFile + ''' to change site metadata & the links on the navigation bar.
 

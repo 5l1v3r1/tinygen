@@ -244,6 +244,42 @@ def blog(blogCmd, config):
         # Rebuild index includes its own message about rebuilding
         rebuildIndex(config)
         status = ('success', 'Rebuild successful')
+    elif blogCmd == 'draft':
+        try:
+            draftCmd = sys.argv[3]
+        except IndexError:
+            draftCmd = None
+            status = ('error', 'No draft command specified. Do help for more information')
+        if draftCmd != None:
+            try:
+                draftArg = sys.argv[4].replace('/', '').replace('\\', '')
+            except IndexError:
+                draftArg = None
+            if draftCmd == 'list':
+                tgls.listFiles('drafts')
+                status = ('success', '')
+            elif draftCmd == 'edit':
+                if draftArg == None:
+                    status = ('error', 'No draft to edit specified.')
+                else:
+                    if os.getenv('EDITOR') is None:
+                        print('EDITOR environment variable not set. Edit source/posts/drafts/' + draftArg + '.html, then press enter to continue.')
+                        input()
+                    else:
+                        editP = subprocess.Popen((os.getenv('EDITOR'), 'source/posts/drafts/' + draftArg + '.html'))
+                        editP.wait()
+            elif draftCmd == 'delete':
+                if draftArg == None:
+                    status = ('error', 'No draft to edit specified.')
+                else:
+                    os.remove('source/posts/drafts/' + draftArg + 'html')
+                    status = ('success', 'Deleted draft')
+            elif draftCmd == 'publish':
+                    if draftArg == None:
+                        status = ('error', 'No draft to publish specified.')
+                    else:
+                        updatePostList(draftArg, 'add')
+                        status = post(draftArg, False, config)
     elif blogCmd == '':
         status = ('success', '')
     else:
