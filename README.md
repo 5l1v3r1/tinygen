@@ -16,7 +16,7 @@ Currently only tested on Python 3.4.3 on Linux
 ## To do list:
 
 - [x] Static blog support
-- [ ] Compatibility with Windows & most *nix distros
+- [x] Compatibility with Windows & most *nix distros
 - [x] Better output with color support
 - [x] Plugin support
 - [x] Theme support
