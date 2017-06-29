@@ -149,7 +149,7 @@ def post(title, edit, config):
         if not postExists:
             status = updatePostList(title, 'add')
             print(status[1])
-            status = ('success', 'Successfully generated page: ' + title)
+            status = ('success', 'Successfully generated post: ' + title)
     return status
 
 def rebuildImages(config, themeName):
@@ -272,14 +272,30 @@ def blog(blogCmd, config):
                 if draftArg == None:
                     status = ('error', 'No draft to edit specified.')
                 else:
-                    os.remove('source/posts/drafts/' + draftArg + 'html')
-                    status = ('success', 'Deleted draft')
+                    if os.path.exists('source/posts/drafts/' + draftArg + '.html'):
+                        os.remove('source/posts/drafts/' + draftArg + '.html')
+                        status = ('success', 'Deleted draft')
+                    else:
+                        status = ('error', 'That draft already does not exist')
             elif draftCmd == 'publish':
                     if draftArg == None:
                         status = ('error', 'No draft to publish specified.')
                     else:
-                        updatePostList(draftArg, 'add')
-                        status = post(draftArg, False, config)
+                        if os.path.exists('source/posts/' + draftArg + '.html'):
+                            status = ('error', 'A post by that name has already been published')
+                        else:
+                            if os.path.exists('source/posts/drafts/' + draftArg + '.html'):
+                                updatePostList(draftArg, 'add')
+                                shutil.copyfile('source/posts/drafts/' + draftArg + '.html', 'source/posts/' + draftArg + '.html')
+                                status = post(draftArg, False, config)
+                                shutil.copyfile('source/theme/' + themeName + '/theme.css', 'generated/blog/theme.css')
+                                print(status[1])
+                                status = rebuildIndex(config)
+                                print(status[1])
+                                rebuildImages(config, themeName)
+                                status = tgrss.updateRSS(config)
+                            else:
+                                status = ('error', 'That draft does not exist')
     elif blogCmd == '':
         status = ('success', '')
     else:

@@ -22,6 +22,8 @@ rm source/posts/*.html
 echo "Cleaned source/posts"
 rm source/pages/*.html
 echo "Cleaned source/pages"
+rm source/posts/drafts/*.html
+echo "Cleaned drafts"
 sqlite3 .data/posts.db "drop table posts;"
 sqlite3 .data/posts.db "CREATE TABLE posts(ID INTEGER PRIMARY KEY AUTOINCREMENT, title text not null, date text);"
 echo "Reset posts database"
