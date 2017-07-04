@@ -13,7 +13,7 @@ rm generated/blog/feed.rss
 rm generated/*.html
 rm generated/*.css
 rm generated/images/*
-rm enerated/blog/images/*
+rm generated/blog/images/*
 echo "Cleaned site index, css, and images"
 rm generated/blog/*.html
 rm generated/blog/*.css
