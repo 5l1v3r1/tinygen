@@ -29,7 +29,7 @@ except ImportError:
     print(RED + 'Notice: ' + RESET + ' markdown library not installed. Try installing with pip.\nWill not be able to use markdown.')
     markdownSupport = False
 # Version
-version = '0.4'
+version = '0.5'
 
 pluginFolder = 'plugins/'
 MainModule = "__init__" # Main module name for plugins
@@ -178,7 +178,7 @@ cfgFile = 'config.cfg'
 config = configparser.ConfigParser()
 
 config['SITE'] = {'title': 'My Site', 'author': 'anonymous', 'description': 'Welcome to my site!', 'footer': 'Powered By TinyGen', 'navbar pages': '', 'domain': 'example.com', 'theme': 'default', 'plugins': '', 'embed-titles': 'true'}
-config['BLOG'] = {'title': 'My Blog', 'standalone': 'false', 'rss': 'true', 'footer': 'Powered by TinyGen', 'lines-preview': '3', 'blog-intro': 'Just a random blog', 'description': 'just a random blog', 'twitter': '', 'github': '', 'facebook': '', 'email': '', 'keybase': '', 'google': ''}
+config['BLOG'] = {'title': 'My Blog', 'standalone': 'false', 'rss': 'true', 'posts-per-page': '10', 'footer': 'Powered by TinyGen', 'lines-preview': '3', 'blog-intro': 'Just a random blog', 'theme': 'default', 'description': 'just a random blog', 'twitter': '', 'github': '', 'facebook': '', 'email': '', 'keybase': '', 'google': ''}
 config['ETC'] = {'color-output': 'true'}
 
 deleteTitle = ''

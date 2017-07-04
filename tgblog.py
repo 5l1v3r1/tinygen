@@ -169,7 +169,7 @@ def blog(blogCmd, config):
     indexError = False # If command doesn't get an argument, don't try to generate
     fileError = False
     formatType = ''
-    themeName = config['SITE']['theme']
+    themeName = config['BLOG']['theme']
     file = '' # file for rebuilding all operation
     if blogCmd == 'edit':
         try:
