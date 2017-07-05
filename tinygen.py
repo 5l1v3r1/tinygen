@@ -29,7 +29,7 @@ except ImportError:
     print(RED + 'Notice: ' + RESET + ' markdown library not installed. Try installing with pip.\nWill not be able to use markdown.')
     markdownSupport = False
 # Version
-version = '0.5'
+version = '0.6'
 
 pluginFolder = 'plugins/'
 MainModule = "__init__" # Main module name for plugins
@@ -90,6 +90,7 @@ def generatePage(title, edit):
     navBar = '<ul id=\'navbar\'>'
     index = False # determines if the current file is the index
     editP = '' # editor proccess
+    doMD = ''
     for i in navBarPages:
         if i == 'index':
             link = 'home'
@@ -114,7 +115,16 @@ def generatePage(title, edit):
     content = open('source/pages/' + title + '.html', 'r').read()
 
     if markdownSupport:
-        content = markdown.markdown(content)
+        if config['SITE']['markdown-prompt'] == 'true':
+            print('Do you want to encode Markdown for this page? y/n')
+            doMD = input('>').lower()
+            if doMD in ('y', 'yes'):
+                print('Using Markdown')
+                content = markdown.markdown(content)
+            else:
+                print('Not using Markdown')
+        else:
+            content = markdown.markdown(content)
 
     template = open('source/page-template.html', 'r').read()
     if title == 'index':
@@ -177,8 +187,8 @@ cfgFile = 'config.cfg'
 
 config = configparser.ConfigParser()
 
-config['SITE'] = {'title': 'My Site', 'author': 'anonymous', 'description': 'Welcome to my site!', 'footer': 'Powered By TinyGen', 'navbar pages': '', 'domain': 'example.com', 'theme': 'default', 'plugins': '', 'embed-titles': 'true'}
-config['BLOG'] = {'title': 'My Blog', 'standalone': 'false', 'rss': 'true', 'posts-per-page': '10', 'footer': 'Powered by TinyGen', 'lines-preview': '3', 'blog-intro': 'Just a random blog', 'theme': 'default', 'description': 'just a random blog', 'twitter': '', 'github': '', 'facebook': '', 'email': '', 'keybase': '', 'google': ''}
+config['SITE'] = {'title': 'My Site', 'markdown-prompt': 'false', 'author': 'anonymous', 'description': 'Welcome to my site!', 'footer': 'Powered By TinyGen', 'navbar pages': '', 'domain': 'example.com', 'theme': 'default', 'plugins': '', 'embed-titles': 'true'}
+config['BLOG'] = {'title': 'My Blog', 'markdown-prompt': 'false', 'standalone': 'false', 'rss': 'true', 'posts-per-page': '10', 'footer': 'Powered by TinyGen', 'lines-preview': '3', 'blog-intro': 'Just a random blog', 'theme': 'default', 'description': 'just a random blog', 'twitter': '', 'github': '', 'facebook': '', 'email': '', 'keybase': '', 'google': ''}
 config['ETC'] = {'color-output': 'true'}
 
 deleteTitle = ''

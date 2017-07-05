@@ -47,6 +47,8 @@ def rebuildIndex(config):
     linesPreview = int(config['BLOG']['lines-preview'])
     previewText = ''
     previewFile = ''
+    doMD = ''
+    mdAsked = []
 
     currentIndex = open(indexTemplate, 'r').read()
 
@@ -65,7 +67,19 @@ def rebuildIndex(config):
         try:
             for x in range(0, linesPreview):
                 if markdownSupport:
-                    postList = postList + markdown.markdown(previewText.splitlines()[x])
+                    if row[1] not in mdAsked:
+                        if config['BLOG']['markdown-prompt'] == 'true':
+                            print('Do you want to encode Markdown for ' + row[1] + ' in the index preview? y/n')
+                            mdAsked.append(row[1])
+                            doMD = input('>').lower()
+                            if doMD in ('y', 'yes'):
+                                print('Using Markdown')
+                                postList = postList + markdown.markdown(previewText.splitlines()[x])
+                            else:
+                                print('Not using Markdown')
+                                postList = postList + previewText.splitlines()[x]
+                        else:
+                            postList = postList + markdown.markdown(previewText.splitlines()[x])
                 else:
                     postList = postList + previewText.splitlines()[x]
         except IndexError:
@@ -112,6 +126,7 @@ def post(title, edit, config):
     editP = ''
     result = ''
     post = ''
+    doMD = ''
     status = status = ('success', '')
     if not edit:
         date = getPostDate(title)
@@ -128,6 +143,15 @@ def post(title, edit, config):
             editP.wait()
     content = open('source/posts/' + title + '.html', 'r').read()
     if markdownSupport:
+        if config['BLOG']['markdown-prompt'] == 'true':
+            print('Do you want to encode Markdown for this post? y/n')
+            doMD = input('>').lower()
+            if doMD in ('y', 'yes'):
+                print('Using Markdown')
+                content = markdown.markdown(content)
+            else:
+                print('Not using Markdown')
+        else:
             content = markdown.markdown(content)
 
     template = open('source/blog-template.html', 'r').read()
@@ -170,6 +194,8 @@ def blog(blogCmd, config):
     fileError = False
     formatType = ''
     themeName = config['BLOG']['theme']
+    startRebuildTime = 0
+    rebuildElapsed = 0
     file = '' # file for rebuilding all operation
     if blogCmd == 'edit':
         try:
@@ -225,6 +251,7 @@ def blog(blogCmd, config):
         # Rebuild all blog posts and assets
         tgplugins.events('blogRebuild', '', config)
         shutil.copyfile('source/theme/' + themeName + '/theme.css', 'generated/blog/theme.css')
+        startRebuildTime = time.clock()
         print('Rebuilding images')
         rebuildImages(config, themeName)
         print('Rebuilding posts')
@@ -243,7 +270,8 @@ def blog(blogCmd, config):
         print('Successfully rebuilt all posts.')
         # Rebuild index includes its own message about rebuilding
         rebuildIndex(config)
-        status = ('success', 'Rebuild successful')
+        rebuildElapsed = time.clock() - startRebuildTime
+        status = ('success', 'Rebuild successful in ' + str(rebuildElapsed) + ' seconds')
     elif blogCmd == 'draft':
         try:
             draftCmd = sys.argv[3]
