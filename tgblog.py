@@ -196,6 +196,7 @@ def blog(blogCmd, config):
     themeName = config['BLOG']['theme']
     startRebuildTime = 0
     rebuildElapsed = 0
+    draftConfirm = 'yes'
     file = '' # file for rebuilding all operation
     if blogCmd == 'edit':
         try:
@@ -310,8 +311,11 @@ def blog(blogCmd, config):
                         status = ('error', 'No draft to publish specified.')
                     else:
                         if os.path.exists('source/posts/' + draftArg + '.html'):
-                            status = ('error', 'A post by that name has already been published')
-                        else:
+                            print('A post by that name has already been published, would you like to overwrite it?')
+                            draftConfirm = input('>').lower()
+                            if not draftConfirm in ('y', 'yes'):
+                                status = ('error', 'A post by that name has already been published, and will not be overwritten')
+                        if draftConfirm in ('y', 'yes'):
                             if os.path.exists('source/posts/drafts/' + draftArg + '.html'):
                                 updatePostList(draftArg, 'add')
                                 shutil.copyfile('source/posts/drafts/' + draftArg + '.html', 'source/posts/' + draftArg + '.html')
