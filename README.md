@@ -25,7 +25,7 @@ Tested on Linux and Windows
 * Clone this repo
 
 ## Current features:
-* ✅ Less than  800 lines of code
+* ✅ Less than  900 lines of code
 * ✅ Not complicated if you have cli experience
 * ✅ Light weight default template
 
