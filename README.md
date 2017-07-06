@@ -12,6 +12,15 @@ Tested on Linux and Windows
 
 ### Linux & Mac
 
+
+#### Debian Based Distros
+
+There is an installation script for Debian (verified for Jessie & Stretch). It should also work for other Debian-based distros.
+
+Download and run the script: wget https://raw.githubusercontent.com/beardog108/tinygen/master/setup/linux-setup.sh && chmod +x linux-setup.sh && ./linux-setup.sh
+
+#### Other Linux and Mac
+
 * Install git with your system package manager if needed
 * Install Python 3 and python3-pip with your system package manager
 * Install Python Markdown with pip
