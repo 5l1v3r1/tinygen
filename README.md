@@ -17,7 +17,7 @@ Tested on Linux and Windows
 
 There is an installation script for Debian (verified for Jessie & Stretch). It should also work for other Debian-based distros.
 
-Download and run the script: wget https://raw.githubusercontent.com/beardog108/tinygen/master/setup/linux-setup.sh && chmod +x linux-setup.sh && ./linux-setup.sh
+Download and run the script: `wget https://raw.githubusercontent.com/beardog108/tinygen/master/setup/linux-setup.sh && chmod +x linux-setup.sh && ./linux-setup.sh`
 
 #### Other Linux and Mac
 
