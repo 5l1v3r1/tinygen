@@ -1,6 +1,6 @@
 # TinyGen
 
-A simple website generator written in Python
+A simple website and blog generator written in Python
 
 Work in progress, but basic features done.
 
@@ -25,9 +25,13 @@ Tested on Linux and Windows
 * Clone this repo
 
 ## Current features:
-* ✅ Less than  900 lines of code
-* ✅ Not complicated if you have cli experience
+* ✅ Less than 900 lines of code
 * ✅ Light weight default template
+* ✅ Theme system
+* ✅ Plugin system with API (currently undocumented)
+* ✅ Markdown and HTML support
+* ✅ RSS feed for blog
+
 
 ## To do list:
 

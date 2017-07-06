@@ -44,8 +44,8 @@ Copyright 2017 Kevin Froman (MIT/Expat License) ''' + UNDERLINE + '''https://Cha
 ''' + GREEN + sys.argv[0] + RESET + ''' help - show this help message
 ''' + GREEN + sys.argv[0] + RESET + ''' rebuild - rebuild all pages
 ''' + GREEN + sys.argv[0] + RESET + ''' delete [page title] - delete a page
-''' + GREEN + sys.argv[0] + RESET + ''' list - list pages ''' +
-'''
+''' + GREEN + sys.argv[0] + RESET + ''' list - list pages
+''' + GREEN + sys.argv[0] + RESET + ''' blog - show commands and info for blogs
 
 Creating a website:
 
