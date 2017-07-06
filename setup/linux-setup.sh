@@ -46,7 +46,7 @@ then
         echo "Python Markdown is optional, so installation will continue"
     fi
     echo "Cloning TinyGen git repo"
-    git clone https://github.com/beardog108/tinygen.git .
+    git clone https://github.com/beardog108/tinygen.git
     if [ "$?" != "0" ]; then
         echo "Failed to clone repo. Installation failed"
         exit 1
