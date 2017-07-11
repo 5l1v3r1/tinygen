@@ -43,7 +43,17 @@ def events(event, data, config):
             elif event == 'blogEdit':
                 retData = retData + plugin.blogEdit(data)
             elif event == 'blogRebuild':
-                retData = retData + plugin.blogEdit(data)
+                retData = retData + plugin.blogRebuild(data)
+            elif event == 'draftEdit':
+                retData = retData + plugin.draftEdit(data)
+            elif event == 'draftList':
+                retData = retData + plugin.draftList(data)
+            elif event == 'draftEdit':
+                retData = retData + plugin.draftEdit(data)
+            elif event == 'draftDelete':
+                retData = retData + plugin.draftDelte(data)
+            elif event == 'draftPublish':
+                retData = retData + plugin.draftPublish(data)
             elif event == 'commands':
                 if command == i['name']:
                     plugin.Commands.commands(*sys.argv)
@@ -55,6 +65,8 @@ def events(event, data, config):
         except TypeError:
             pass
             #ranPlugins.append(plugin)
+        except NameError:
+            pass
     if retData == '':
         retData = data
     return retData
