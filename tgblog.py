@@ -282,12 +282,15 @@ def blog(blogCmd, config):
         if draftCmd != None:
             try:
                 draftArg = sys.argv[4].replace('/', '').replace('\\', '')
+                draftArg = draftArg.replace(' ', '-')
             except IndexError:
                 draftArg = None
             if draftCmd == 'list':
+                tgplugins.events('draftList', '', config)
                 tgls.listFiles('drafts')
                 status = ('success', '')
             elif draftCmd == 'edit':
+                tgplugins.events('draftEdit', '', config)
                 if draftArg == None:
                     status = ('error', 'No draft to edit specified.')
                 else:
@@ -298,6 +301,7 @@ def blog(blogCmd, config):
                         editP = subprocess.Popen((os.getenv('EDITOR'), 'source/posts/drafts/' + draftArg + '.html'))
                         editP.wait()
             elif draftCmd == 'delete':
+                tgplugins.events('draftDelete', '', config)
                 if draftArg == None:
                     status = ('error', 'No draft to edit specified.')
                 else:
@@ -307,6 +311,7 @@ def blog(blogCmd, config):
                     else:
                         status = ('error', 'That draft already does not exist')
             elif draftCmd == 'publish':
+                    tgplugins.events('draftPublish', '', config)
                     if draftArg == None:
                         status = ('error', 'No draft to publish specified.')
                     else:

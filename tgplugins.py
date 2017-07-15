@@ -67,6 +67,8 @@ def events(event, data, config):
             #ranPlugins.append(plugin)
         except NameError:
             pass
+        except AttributeError:
+            pass
     if retData == '':
         retData = data
     return retData

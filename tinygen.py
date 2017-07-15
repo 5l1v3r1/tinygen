@@ -29,7 +29,7 @@ except ImportError:
     print(RED + 'Notice: ' + RESET + ' markdown library not installed. Try installing with pip.\nWill not be able to use markdown.')
     markdownSupport = False
 # Version
-version = '0.6'
+version = '0.7'
 
 pluginFolder = 'plugins/'
 MainModule = "__init__" # Main module name for plugins
