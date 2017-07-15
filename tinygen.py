@@ -26,7 +26,7 @@ markdownSupport = True
 try:
     import markdown
 except ImportError:
-    print(RED + 'Notice: ' + RESET + ' markdown library not installed. Try installing with pip.\nWill not be able to use markdown.')
+    print(RED + 'Notice: ' + RESET + ' Python Markdown library not installed. Try installing with pip.\nWill not be able to use markdown.')
     markdownSupport = False
 # Version
 version = '0.7'
