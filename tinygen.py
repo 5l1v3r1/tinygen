@@ -8,6 +8,10 @@ if sys.version_info.major == 2:
     sys.exit(1)
 
 import configparser, os, shutil, subprocess, tgblog, createDelete, tgsocial, imp, tgplugins, tgls
+try:
+    import webServer
+except:
+    sys.stderr.write('Error loading web server module')
 
 # configparser: needed for site configuration
 # os: cross platform file operations mostly
@@ -29,7 +33,7 @@ except ImportError:
     print(RED + 'Notice: ' + RESET + ' Python Markdown library not installed. Try installing with pip.\nWill not be able to use markdown.')
     markdownSupport = False
 # Version
-version = '0.8'
+version = '0.9'
 
 pluginFolder = 'plugins/'
 MainModule = "__init__" # Main module name for plugins
@@ -75,6 +79,13 @@ Creating a blog:
     Optional: edit source/theme/''' + themeName + '''/theme.css to change the global styles.
     Optional: edit source/blog-index.html to change the blog index.
     Optional: edit source/blog-template.html to change global markup\n''')
+    print('''Testing the site/blog:
+    Either open the index.html file in your browser, or:
+
+    Do ''' + GREEN + sys.argv[0] + RESET + ''' server - start the testing web server
+        (edit the port in ''' + cfgFile + ''' if you want to host on port 80, under ETC)
+
+    ''')
     return
 
 def fatalError(msg):
@@ -111,7 +122,7 @@ def generatePage(title, edit):
                 editP.wait()
         except TypeError:
             print('Unable to edit: ' + title + '. reason: editor environment variable is not set')
-            return
+            return False
     content = open('source/pages/' + title + '.html', 'r').read()
     if content == '':
         print('Edited file is empty, still save it? y/n')
@@ -120,7 +131,7 @@ def generatePage(title, edit):
             print('Saving')
         else:
             print('Not saving')
-            return
+            return False
     if markdownSupport:
         if config['SITE']['markdown-prompt'] == 'true':
             print('Do you want to encode Markdown for this page? y/n')
@@ -171,7 +182,7 @@ def generatePage(title, edit):
     except FileExistsError:
         pass
     print('Successfully generated page: ' + title)
-    return
+    return True
 
 def rebuild():
     # Rebuild all webpages
@@ -196,7 +207,7 @@ config = configparser.ConfigParser()
 
 config['SITE'] = {'title': 'My Site', 'markdown-prompt': 'false', 'author': 'anonymous', 'description': 'Welcome to my site!', 'footer': 'Powered By TinyGen', 'navbar pages': '', 'domain': 'example.com', 'theme': 'default', 'plugins': '', 'embed-titles': 'true'}
 config['BLOG'] = {'title': 'My Blog', 'markdown-prompt': 'false', 'standalone': 'false', 'rss': 'true', 'posts-per-page': '10', 'footer': 'Powered by TinyGen', 'lines-preview': '3', 'blog-intro': 'Just a random blog', 'theme': 'default', 'description': 'just a random blog', 'twitter': '', 'github': '', 'facebook': '', 'email': '', 'keybase': '', 'google': ''}
-config['ETC'] = {'color-output': 'true'}
+config['ETC'] = {'color-output': 'true', 'server-port': '8080', 'server-ip': '127.0.0.1'}
 
 deleteTitle = ''
 
@@ -206,6 +217,8 @@ formatType = ''
 
 plugins = ''
 plName = ''
+
+didEdit = False # if the page was edited successfully
 
 # Blog variables, argument (command) and its return status
 blogArg = ''
@@ -252,15 +265,16 @@ if command == 'edit':
     except IndexError:
         fatalError('syntax: edit "page title"')
     try:
-        generatePage(newPageTitle, True)
+        didEdit = generatePage(newPageTitle, True)
     except Exception as e:
         fatalError('Unknown error occured (during edit): ' + str(e))
-    try:
-        print('Copying images...')
-        shutil.copytree('source/pages/images/', 'generated/images/')
-        createDelete.copytree('source/theme/' + themeName + '/images/', 'generated/images/')
-    except Exception as e:
-        fatalError('Unknown error while copying images: ' + str(e))
+    if didEdit:
+        try:
+            print('Copying images...')
+            shutil.copytree('source/pages/images/', 'generated/images/')
+            createDelete.copytree('source/theme/' + themeName + '/images/', 'generated/images/')
+        except Exception as e:
+            fatalError('Unknown error while copying images: ' + str(e))
 elif command == 'rebuild':
     rebuild()
 elif command == 'delete':
@@ -287,6 +301,12 @@ elif command == 'blog':
 elif command == 'list':
     print('Listing pages...')
     tgls.listFiles('pages')
+elif command == 'server':
+    print('Starting server')
+    retData = webServer.webServer(config)
+    if retData == 'port already taken':
+        fatalError('Configured port for web server already taken')
+
 elif command == 'help':
     try:
         helpType = sys.argv[2]
