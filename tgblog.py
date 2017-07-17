@@ -142,6 +142,14 @@ def post(title, edit, config):
             editP = subprocess.Popen((os.getenv('EDITOR'), 'source/posts/' + title + '.html'))
             editP.wait()
     content = open('source/posts/' + title + '.html', 'r').read()
+    if content == '':
+        print('Edited file is empty, still save it? y/n')
+        doSave = input('>').lower()
+        if doSave in ('y', 'yes'):
+            print('Saving')
+        else:
+            print('Not saving')
+            return
     if markdownSupport:
         if config['BLOG']['markdown-prompt'] == 'true':
             print('Do you want to encode Markdown for this post? y/n')

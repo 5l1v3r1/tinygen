@@ -113,7 +113,14 @@ def generatePage(title, edit):
             print('Unable to edit: ' + title + '. reason: editor environment variable is not set')
             return
     content = open('source/pages/' + title + '.html', 'r').read()
-
+    if content == '':
+        print('Edited file is empty, still save it? y/n')
+        doSave = input('>').lower()
+        if doSave in ('y', 'yes'):
+            print('Saving')
+        else:
+            print('Not saving')
+            return
     if markdownSupport:
         if config['SITE']['markdown-prompt'] == 'true':
             print('Do you want to encode Markdown for this page? y/n')
