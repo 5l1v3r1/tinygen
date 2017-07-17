@@ -126,8 +126,9 @@ def generatePage(title, edit):
                 else:
                     editP = subprocess.Popen((os.getenv('EDITOR'), 'source/pages/' + title + '.html'))
                     editP.wait()
-            elif config['ETC']['no-editor'] == 'true:':
-                print('no-editor is set to true, not editing.')
+            elif config['ETC']['no-editor'] == 'true':
+                print('no-editor is set to true, waiting for you to edit it manually.')
+                input()
 
         except TypeError:
             print('Unable to edit: ' + title + '. reason: editor environment variable is not set')
@@ -216,7 +217,7 @@ config = configparser.ConfigParser()
 
 config['SITE'] = {'title': 'My Site', 'markdown-prompt': 'false', 'author': 'anonymous', 'description': 'Welcome to my site!', 'footer': 'Powered By TinyGen', 'navbar pages': '', 'domain': 'example.com', 'theme': 'default', 'plugins': '', 'embed-titles': 'true'}
 config['BLOG'] = {'title': 'My Blog', 'markdown-prompt': 'false', 'standalone': 'false', 'rss': 'true', 'posts-per-page': '10', 'footer': 'Powered by TinyGen', 'lines-preview': '3', 'blog-intro': 'Just a random blog', 'theme': 'default', 'description': 'just a random blog', 'twitter': '', 'github': '', 'facebook': '', 'email': '', 'keybase': '', 'google': ''}
-config['ETC'] = {'color-output': 'true', 'server-port': '8080', 'server-ip': '127.0.0.1'}
+config['ETC'] = {'color-output': 'true', 'server-port': '8080', 'server-ip': '127.0.0.1', 'no-editor': 'false'}
 
 deleteTitle = ''
 

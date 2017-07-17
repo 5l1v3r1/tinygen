@@ -140,12 +140,17 @@ def post(title, edit, config):
         date = datetime.datetime.fromtimestamp(int(time.time())).strftime('%Y-%m-%d')
     if edit:
         # If recieved arg to edit the file
-        if os.getenv('EDITOR') is None:
-            print('EDITOR environment variable not set. Edit source/posts/' + title + '.html, then press enter to continue.')
-            input()
+        if config['ETC']['no-editor'] == 'false':
+            if os.getenv('EDITOR') is None:
+                print('EDITOR environment variable not set. Edit source/posts/' + title + '.html, then press enter to continue.')
+                input()
+            else:
+                editP = subprocess.Popen((os.getenv('EDITOR'), 'source/posts/' + title + '.html'))
+                editP.wait()
         else:
-            editP = subprocess.Popen((os.getenv('EDITOR'), 'source/posts/' + title + '.html'))
-            editP.wait()
+            print('no-editor is set to true, waiting for you to edit manually')
+            input()
+
     content = open('source/posts/' + title + '.html', 'r').read()
     if content == '':
         print('Edited file is empty, still save it? y/n')
@@ -154,7 +159,7 @@ def post(title, edit, config):
             print('Saving')
         else:
             print('Not saving')
-            return
+            return ('sucesss', 'Did not save')
     if markdownSupport:
         if config['BLOG']['markdown-prompt'] == 'true':
             print('Do you want to encode Markdown for this post? y/n')
