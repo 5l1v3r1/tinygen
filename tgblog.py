@@ -49,6 +49,7 @@ def rebuildIndex(config):
     previewFile = ''
     doMD = ''
     mdAsked = []
+    rowLink = ''
 
     currentIndex = open(indexTemplate, 'r').read()
 
@@ -61,7 +62,11 @@ def rebuildIndex(config):
         previewFile = open('source/posts/' + row[1] + '.html')
         previewText = previewFile.read()
         print('Adding ' + row[1] + ' to index...')
-        postList = postList + '<a href="' + row[1] + '.html"><h2>' + row[1].replace('-', ' ').title() + '</h2></a>'
+        if ':' in row[1]:
+            rowLink = './' + row[1]
+        else:
+            rowLink = row[1]
+        postList = postList + '<a href="' + rowLink + '.html"><h2>' + row[1].replace('-', ' ').title() + '</h2></a>'
         postList = postList + '<div class="postDate">' + datetime.datetime.fromtimestamp(int(row[2])).strftime('%Y-%m-%d') + '</div>'
         postList = postList + '<div class="postPreview">'
         try:

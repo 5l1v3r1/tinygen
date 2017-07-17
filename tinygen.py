@@ -109,7 +109,12 @@ def generatePage(title, edit):
             i = './blog/index'
             link = 'Blog'
         else:
-            link = i
+            if i != '':
+                link = i # ./ is done because some characters like ':' are weird without it
+            else:
+                link = i
+            i = './' + i
+
         navBar = navBar + '<li class="navBarItem"><a href="' + i + '.html">' + link.title() + '</a> </li>'
     navBar = navBar + '</ul>'
     if edit:
