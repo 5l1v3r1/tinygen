@@ -115,6 +115,8 @@ def generatePage(title, edit):
                 link = i
             if not i.startswith('#'):
                 i = './' + i + '.html'
+            else:
+                link = link.replace('#', '')
 
         navBar = navBar + '<li class="navBarItem"><a href="' + i + '">' + link.title() + '</a> </li>'
     navBar = navBar + '</ul>'
