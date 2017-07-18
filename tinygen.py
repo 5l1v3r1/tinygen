@@ -113,9 +113,10 @@ def generatePage(title, edit):
                 link = i # ./ is done because some characters like ':' are weird without it
             else:
                 link = i
-            i = './' + i
+            if not i.startswith('#'):
+                i = './' + i + '.html'
 
-        navBar = navBar + '<li class="navBarItem"><a href="' + i + '.html">' + link.title() + '</a> </li>'
+        navBar = navBar + '<li class="navBarItem"><a href="' + i + '">' + link.title() + '</a> </li>'
     navBar = navBar + '</ul>'
     if edit:
         try:
