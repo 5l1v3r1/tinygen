@@ -33,7 +33,7 @@ except ImportError:
     print(RED + 'Notice: ' + RESET + ' Python Markdown library not installed. Try installing with pip.\nWill not be able to use markdown.')
     markdownSupport = False
 # Version
-version = '0.9'
+version = '1.0'
 
 pluginFolder = 'plugins/'
 MainModule = "__init__" # Main module name for plugins
@@ -113,9 +113,12 @@ def generatePage(title, edit):
                 link = i # ./ is done because some characters like ':' are weird without it
             else:
                 link = i
-            i = './' + i
+            if not i.startswith('#'):
+                i = './' + i + '.html'
+            else:
+                link = link.replace('#', '')
 
-        navBar = navBar + '<li class="navBarItem"><a href="' + i + '.html">' + link.title() + '</a> </li>'
+        navBar = navBar + '<li class="navBarItem"><a href="' + i + '">' + link.title() + '</a> </li>'
     navBar = navBar + '</ul>'
     if edit:
         try:
