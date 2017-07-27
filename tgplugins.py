@@ -25,50 +25,49 @@ def events(event, data, config):
     try:
         command = sys.argv[1]
     except IndexError:
-        return
+        command = None
     retData = ''
-    #ranPlugins = [''] Doesn't seem like we need to actually do this
+    ranPlugins = []
     for i in getPlugins(config):
         plugin = loadPlugin(i)
-        #if plugin not in ranPlugins:
-        try:
-            if event == 'startup':
-                retData = retData + plugin.startup(data)
-            elif event == 'genPage':
-                retData = retData + plugin.genPage(data)
-            elif event == 'deletePage':
-                retData = retData + plugin.deletePage(data)
-            elif event == 'rebuild':
-                retData = retData + plugin.rebuild(data)
-            elif event == 'blogEdit':
-                retData = retData + plugin.blogEdit(data)
-            elif event == 'blogRebuild':
-                retData = retData + plugin.blogRebuild(data)
-            elif event == 'draftEdit':
-                retData = retData + plugin.draftEdit(data)
-            elif event == 'draftList':
-                retData = retData + plugin.draftList(data)
-            elif event == 'draftEdit':
-                retData = retData + plugin.draftEdit(data)
-            elif event == 'draftDelete':
-                retData = retData + plugin.draftDelte(data)
-            elif event == 'draftPublish':
-                retData = retData + plugin.draftPublish(data)
-            elif event == 'commands':
-                if command == i['name']:
-                    plugin.Commands.commands(*sys.argv)
-                    retData = True
+        if plugin not in ranPlugins:
+            try:
+                if event == 'startup':
+                    retData = retData + plugin.startup(data)
+                elif event == 'genPage':
+                    retData = retData + plugin.genPage(data)
+                elif event == 'deletePage':
+                    retData = retData + plugin.deletePage(data)
+                elif event == 'rebuild':
+                    retData = retData + plugin.rebuild(data)
+                elif event == 'blogEdit':
+                    retData = retData + plugin.blogEdit(data)
+                elif event == 'blogRebuild':
+                    retData = retData + plugin.blogRebuild(data)
+                elif event == 'draftEdit':
+                    retData = retData + plugin.draftEdit(data)
+                elif event == 'draftList':
+                    retData = retData + plugin.draftList(data)
+                elif event == 'draftEdit':
+                    retData = retData + plugin.draftEdit(data)
+                elif event == 'draftDelete':
+                    retData = retData + plugin.draftDelte(data)
+                elif event == 'draftPublish':
+                    retData = retData + plugin.draftPublish(data)
+                elif event == 'commands':
+                    if command == i['name']:
+                        plugin.Commands.commands(*sys.argv)
+                        retData = True
+                    else:
+                        break
                 else:
-                    break
-            else:
-                print('Attempted to call unknown event: ' + event)
-        except TypeError:
-            pass
-            #ranPlugins.append(plugin)
-        except NameError:
-            pass
-        except AttributeError:
-            pass
+                    print('Attempted to call unknown event: ' + event)
+            except TypeError:
+                pass
+            
+            except AttributeError:
+                pass
+            ranPlugins.append(plugin.myName())
     if retData == '':
         retData = data
     return retData

@@ -28,6 +28,9 @@ def blogRebuild(data):
 	print('blog rebuild event')
 	return
 
+def myName():
+	return 'helloworld'
+
 class Commands:
 	def commands(*args):
 		argCount = 0 # We do this to skip the first argument, which is just 'helloworld'

@@ -48,3 +48,6 @@ def blogDelete(data):
 
 def blogRebuild(data):
 	return
+
+def myName():
+	return 'author-info'
