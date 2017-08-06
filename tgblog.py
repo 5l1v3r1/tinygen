@@ -1,5 +1,5 @@
 # Copyright 2017 Kevin Froman - MIT License - https://ChaosWebs.net/
-import sys, os, configparser, createDelete, subprocess, shutil, sqlite3, time, datetime, tgsocial, tgrss, tgplugins, tgls
+import sys, os, configparser, createDelete, subprocess, shutil, sqlite3, time, datetime, tgsocial, tgrss, tgplugins, tgls, titles
 
 markdownSupport = True # if the user has python markdown, which isn't standard library.
 try:
@@ -66,7 +66,7 @@ def rebuildIndex(config):
             rowLink = './' + row[1]
         else:
             rowLink = row[1]
-        postList = postList + '<a href="' + rowLink + '.html"><h2>' + row[1].replace('-', ' ').title() + '</h2></a>'
+        postList = postList + '<a href="' + rowLink + '.html"><h2>' + titles.convTitle(row[1].replace('-', ' ')) + '</h2></a>'
         postList = postList + '<div class="postDate">' + datetime.datetime.fromtimestamp(int(row[2])).strftime('%Y-%m-%d') + '</div>'
         postList = postList + '<div class="postPreview">'
         try:
@@ -174,7 +174,7 @@ def post(title, edit, config):
 
     template = open('source/blog-template.html', 'r').read()
     post = '[{PLUGINCONTENT}]' + tgplugins.events('blogEdit', template, config)
-    post = post.replace('[{POSTTITLE}]', title.replace('-', ' ').title())
+    post = post.replace('[{POSTTITLE}]', titles.convTitle(title.replace('-', ' ')))
     post = post.replace('[{SITETITLE}]', config['BLOG']['title'])
     post = post.replace('[{AUTHOR}]', config['SITE']['author'])
     post = post.replace('[{POSTCONTENT}]', content)

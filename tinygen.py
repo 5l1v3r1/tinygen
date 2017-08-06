@@ -7,7 +7,7 @@ if sys.version_info.major == 2:
     sys.stderr.write('Python 2 is not supported. Please use Python 3.\n')
     sys.exit(1)
 
-import configparser, os, shutil, subprocess, tgblog, createDelete, tgsocial, imp, tgplugins, tgls
+import configparser, os, shutil, subprocess, tgblog, createDelete, tgsocial, imp, tgplugins, tgls, titles
 try:
     import webServer
 except:
@@ -118,7 +118,7 @@ def generatePage(title, edit):
             else:
                 link = link.replace('#', '')
 
-        navBar = navBar + '<li class="navBarItem"><a href="' + i + '">' + link.title() + '</a> </li>'
+        navBar = navBar + '<li class="navBarItem"><a href="' + i + '">' + titles.convTitle(link) + '</a> </li>'
     navBar = navBar + '</ul>'
     if edit:
         try:
@@ -163,10 +163,10 @@ def generatePage(title, edit):
         index = True
     page = tgplugins.events('genPage', template, config)
     if config['SITE']['embed-titles'] == 'false':
-        page = page.replace('[{TITLE}]', title.title(), 1)
+        page = page.replace('[{TITLE}]', titles.convTitle(title), 1)
         page = page.replace('[{TITLE}]', '')
     else:
-        page = page.replace('[{TITLE}]', title.title())
+        page = page.replace('[{TITLE}]', titles.convTitle(title))
     page = page.replace('[{SITETITLE}]', config['SITE']['title'])
     page = page.replace('[{AUTHOR}]', config['SITE']['author'])
     page = page.replace('[{CONTENT}]', content)
