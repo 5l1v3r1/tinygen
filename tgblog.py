@@ -318,6 +318,16 @@ def blog(blogCmd, config):
                     else:
                         editP = subprocess.Popen((os.getenv('EDITOR'), 'source/posts/drafts/' + draftArg + '.html'))
                         editP.wait()
+            elif draftCmd == 'redraft':
+                if draftArg == None:
+                    status = ('error', 'No post to redraft specified.')
+                else:
+                    draftArg = draftArg + '.html'
+                    if not os.path.exists('source/posts/' + draftArg):
+                        status = ('error', 'That post does not exist')
+                    else:
+                        shutil.copyfile('source/posts/' + draftArg, 'source/posts/drafts/' + draftArg)
+                        print('Successfully redrafted the post.')
             elif draftCmd == 'delete':
                 tgplugins.events('draftDelete', '', config)
                 if draftArg == None:

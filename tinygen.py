@@ -33,7 +33,7 @@ except ImportError:
     print(RED + 'Notice: ' + RESET + ' Python Markdown library not installed. Try installing with pip.\nWill not be able to use markdown.')
     markdownSupport = False
 # Version
-version = '1.1'
+version = '1.2'
 
 pluginFolder = 'plugins/'
 MainModule = "__init__" # Main module name for plugins
@@ -73,6 +73,7 @@ Creating a blog:
        ''' + GREEN + sys.argv[0] + RESET + ''' draft list - list drafts
        ''' + GREEN + sys.argv[0] + RESET + ''' draft delete [draft title] - delete a draft
        ''' + GREEN + sys.argv[0] + RESET + ''' draft publish [draft title] - publish a draft
+       ''' + GREEN + sys.argv[0] + RESET + ''' draft redraft [post title] - create a draft from an existing post. Overwrites any existing drafts by the same name.
 
     Open & edit ''' + cfgFile + ''' to change site metadata & the links on the navigation bar.
 
