@@ -1,5 +1,5 @@
 # Copyright 2017 Kevin Froman - MIT License - https://ChaosWebs.net/
-import sys, os, configparser, createDelete, subprocess, shutil, sqlite3, time, datetime, tgsocial, tgrss, tgplugins, tgls, titles
+import sys, os, configparser, random, webbrowser, createDelete, subprocess, shutil, sqlite3, time, datetime, tgsocial, tgrss, tgplugins, tgls, titles
 
 markdownSupport = True # if the user has python markdown, which isn't standard library.
 try:
@@ -215,6 +215,8 @@ def blog(blogCmd, config):
     startRebuildTime = 0
     rebuildElapsed = 0
     draftConfirm = 'yes'
+    previewData = '' # for draft preview
+    previewFile = 0 # will be set to random
     file = '' # file for rebuilding all operation
     if blogCmd == 'edit':
         try:
@@ -338,6 +340,25 @@ def blog(blogCmd, config):
                         status = ('success', 'Deleted draft')
                     else:
                         status = ('error', 'That draft already does not exist')
+            elif draftCmd == 'preview':
+                if draftArg == None:
+                    status = ('error', 'No draft to preview specified.')
+                else:
+                    try:
+                        previewData = open('source/posts/drafts/' + draftArg + '.html').read()
+                        if markdownSupport:
+                            previewData = markdown.markdown(previewData)
+                        previewFile = str(random.randint(1, 10000000)) + '.html'
+                        status = ('success', 'Opening browser for preview')
+                    except (IOError, FileNotFoundError, PermissionError) as e:
+                        status = ('error', 'Could not open file to preview: ' + str(e))
+                    if status[0] == 'success':
+                        open(previewFile, 'w').write(previewData)
+                        time.sleep(0.5)
+                        webbrowser.open(previewFile)
+                        time.sleep(2) # necessary
+                        os.remove(previewFile)
+
             elif draftCmd == 'publish':
                     tgplugins.events('draftPublish', '', config)
                     if draftArg == None:
