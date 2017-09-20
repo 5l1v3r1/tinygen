@@ -7,7 +7,7 @@ if sys.version_info.major == 2:
     sys.stderr.write('Python 2 is not supported. Please use Python 3.\n')
     sys.exit(1)
 
-import configparser, os, shutil, subprocess, tgblog, createDelete, tgsocial, imp, tgplugins, tgls, titles
+import configparser, os, shutil, subprocess, tgblog, createDelete, tgsocial, imp, tgplugins, tgls, titles, readline
 try:
     import webServer
 except:
