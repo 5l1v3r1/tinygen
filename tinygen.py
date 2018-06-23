@@ -68,12 +68,12 @@ Creating a website:
 
 Creating a blog:
 
-    Do ''' + GREEN + sys.argv[0] + RESET + ''' edit [post title] - start creating or editing a post
-       ''' + GREEN + sys.argv[0] + RESET + ''' draft edit [draft title] - edit a draft
-       ''' + GREEN + sys.argv[0] + RESET + ''' draft list - list drafts
-       ''' + GREEN + sys.argv[0] + RESET + ''' draft delete [draft title] - delete a draft
-       ''' + GREEN + sys.argv[0] + RESET + ''' draft publish [draft title] - publish a draft
-       ''' + GREEN + sys.argv[0] + RESET + ''' draft redraft [post title] - create a draft from an existing post. Overwrites any existing drafts by the same name.
+    Do ''' + GREEN + sys.argv[0] + RESET + ''' blog edit [post title] - start creating or editing a post
+       ''' + GREEN + sys.argv[0] + RESET + ''' blog draft edit [draft title] - edit a draft
+       ''' + GREEN + sys.argv[0] + RESET + ''' blog draft list - list drafts
+       ''' + GREEN + sys.argv[0] + RESET + ''' blog draft delete [draft title] - delete a draft
+       ''' + GREEN + sys.argv[0] + RESET + ''' blog draft publish [draft title] - publish a draft
+       ''' + GREEN + sys.argv[0] + RESET + ''' blog draft redraft [post title] - create a draft from an existing post. Overwrites any existing drafts by the same name.
 
     Open & edit ''' + cfgFile + ''' to change site metadata & the links on the navigation bar.
 
